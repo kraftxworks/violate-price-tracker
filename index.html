@@ -38,12 +38,33 @@
   }
   .logo { font-weight: 700; font-size: 17px; letter-spacing: -0.4px; }
   .logo small { color: var(--muted); font-weight: 400; font-size: 12px; margin-left: 10px; }
-  .nav { display: flex; gap: 22px; font-size: 13px; align-items: center; }
+  .nav { display: flex; gap: 12px; font-size: 13px; align-items: center; }
   .nav a { color: var(--muted); text-decoration: none; cursor: pointer; }
-  .nav a.active { color: var(--fg); font-weight: 500; }
+  .nav a:hover { color: var(--fg); }
+  .avatar { width: 26px; height: 26px; border-radius: 50%; background: #111; color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; cursor: pointer; }
+  .user-email { font-size: 12px; color: var(--muted); max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
   main { max-width: 1080px; margin: 0 auto; padding: 22px 24px 60px; }
 
+  /* Auth form */
+  .auth-page { max-width: 380px; margin: 80px auto; padding: 0 20px; }
+  .auth-page h2 { font-size: 22px; margin-bottom: 4px; }
+  .auth-page p.sub { color: var(--muted); font-size: 13px; margin-bottom: 20px; }
+  .auth-form { display: flex; flex-direction: column; gap: 10px; }
+  .auth-form input {
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: inherit;
+  }
+  .auth-form input:focus { outline: none; border-color: var(--fg); }
+  .auth-form .btn { width: 100%; text-align: center; }
+  .auth-toggle { margin-top: 12px; font-size: 12px; color: var(--muted); text-align: center; }
+  .auth-toggle a { color: var(--fg); font-weight: 500; cursor: pointer; text-decoration: none; }
+  .auth-error { color: var(--warn); font-size: 12px; min-height: 18px; }
+
+  /* Add bar */
   .add-bar {
     display: flex;
     gap: 8px;
@@ -77,9 +98,7 @@
     color: var(--fg);
   }
 
-  .notes-bar {
-    margin-bottom: 18px;
-  }
+  .notes-bar { margin-bottom: 18px; }
   .notes-bar textarea {
     width: 100%;
     padding: 8px 12px;
@@ -105,7 +124,6 @@
     margin-bottom: 18px;
   }
   .meta strong { color: var(--fg); font-weight: 600; }
-  .meta .accent { color: var(--accent); }
 
   .category {
     border: 1px solid var(--line);
@@ -264,12 +282,6 @@
   }
   .toast.show { opacity: 1; }
 
-  .config-warning {
-    background: #fff4e6; border: 1px solid #f0c987; border-radius: 6px;
-    padding: 10px 14px; margin-bottom: 14px; font-size: 12px; color: #7a4f10;
-  }
-  .config-warning code { background: #fce6c0; padding: 1px 4px; border-radius: 3px; }
-
   .loader { display: inline-block; width: 12px; height: 12px; border: 2px solid currentColor; border-top-color: transparent; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 4px; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -284,21 +296,31 @@
 <body>
 <header>
   <div class="logo">violate <small>your bucket list, at the cheapest price</small></div>
-  <nav class="nav">
-    <a class="active">My list</a>
-    <a id="syncBtn">Sync</a>
-  </nav>
+  <nav class="nav" id="navBar"></nav>
 </header>
 
-<main>
-  <div id="configWarning" class="config-warning" style="display:none;">
-    <strong>Setup needed.</strong> Configure your <code>SUPABASE_URL</code> and <code>SUPABASE_ANON_KEY</code> in this file and deploy <code>/api/suggest</code> with a <code>GEMINI_API_KEY</code> on Vercel. See README.
+<!-- Auth page (shown when logged out) -->
+<div id="authPage" class="auth-page" style="display:none;">
+  <h2 id="authTitle">Sign in</h2>
+  <p class="sub">Save your wishlist across all your devices.</p>
+  <div class="auth-form" id="authForm">
+    <input type="email" id="authEmail" placeholder="Email" autocomplete="email" />
+    <input type="password" id="authPassword" placeholder="Password" autocomplete="current-password" />
+    <div class="auth-error" id="authError"></div>
+    <button class="btn" id="authSubmit">Sign in</button>
   </div>
+  <div class="auth-toggle">
+    <span id="authToggleText">Don't have an account?</span>
+    <a id="authToggleLink">Sign up</a>
+  </div>
+</div>
 
+<!-- App (shown when logged in) -->
+<main id="appMain" style="display:none;">
   <div class="add-bar">
     <input type="text" id="q" placeholder="What do you want? e.g. Sony WH-1000XM5, oversized vintage band tee, Goa weekend" autocomplete="off" />
     <button class="btn" id="addBtn">Add</button>
-    <button class="btn btn-ghost" onclick="openBulk()">Bulk add</button>
+    <button class="btn btn-ghost" id="bulkOpenBtn">Bulk add</button>
   </div>
   <div class="notes-bar">
     <textarea id="notes" rows="1" placeholder="Optional notes (size, colour, budget, brand vibe)..."></textarea>
@@ -318,8 +340,8 @@
     <p class="helper">Paste one item per line. We'll find the cheapest vendors for each.</p>
     <textarea id="bulkText" placeholder="Sony WH-1000XM5&#10;iPad Pro M4&#10;DJI Osmo Pocket 3&#10;Goa 3N package"></textarea>
     <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeBulk()">Cancel</button>
-      <button class="btn" id="bulkGoBtn" onclick="bulkAdd()">Find prices</button>
+      <button class="btn btn-ghost" id="bulkCancelBtn">Cancel</button>
+      <button class="btn" id="bulkGoBtn">Find prices</button>
     </div>
   </div>
 </div>
@@ -330,10 +352,8 @@
   // ============================================================
   //  CONFIG
   // ============================================================
-  const SUPABASE_CONFIG = {
-    url: "https://cqlyqyuvinhlyyqwbcdt.supabase.co",
-    anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxbHlxeXV2aW5obHl5cXdiY2R0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0NjM5NjUsImV4cCI6MjA5MzAzOTk2NX0.r-KzoMe7HlYg8jVS1T4u1Zcyk4Ten9VTIo4-oAU3trM"
-  };
+  const SUPABASE_URL = "https://cqlyqyuvinhlyyqwbcdt.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxbHlxeXV2aW5obHl5cXdiY2R0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0NjM5NjUsImV4cCI6MjA5MzAzOTk2NX0.r-KzoMe7HlYg8jVS1T4u1Zcyk4Ten9VTIo4-oAU3trM";
   const SUGGEST_ENDPOINT = "/api/suggest";
 
   // ============================================================
@@ -350,42 +370,97 @@
   const VENDOR_ORDER = ["Amazon", "Flipkart", "Myntra", "Ajio", "Meesho", "Nykaa Fashion"];
 
   // ============================================================
-  //  Anonymous device id
+  //  Supabase helpers (REST + Auth via GoTrue)
   // ============================================================
-  function getDeviceId() {
-    let id = localStorage.getItem("violate.deviceId");
-    if (!id) {
-      id = "v_" + (crypto.randomUUID ? crypto.randomUUID() : Date.now() + "_" + Math.random().toString(36).slice(2));
-      localStorage.setItem("violate.deviceId", id);
-    }
-    return id;
-  }
-  const DEVICE_ID = getDeviceId();
+  let accessToken = null;
+  let refreshToken = null;
+  let currentUser = null;
 
-  // ============================================================
-  //  Supabase REST helpers
-  // ============================================================
-  const SB_OK = !SUPABASE_CONFIG.url.includes("YOUR-PROJECT") && !SUPABASE_CONFIG.anonKey.includes("YOUR-");
-  if (!SB_OK) document.getElementById("configWarning").style.display = "block";
+  function authHeaders() {
+    return {
+      "apikey": SUPABASE_ANON_KEY,
+      "Authorization": `Bearer ${accessToken || SUPABASE_ANON_KEY}`,
+      "Content-Type": "application/json",
+      "Prefer": "return=representation"
+    };
+  }
 
   async function sbFetch(path, opts = {}) {
-    if (!SB_OK) throw new Error("Supabase not configured");
-    const url = `${SUPABASE_CONFIG.url}/rest/v1${path}`;
-    const headers = {
-      "apikey": SUPABASE_CONFIG.anonKey,
-      "Authorization": `Bearer ${SUPABASE_CONFIG.anonKey}`,
-      "Content-Type": "application/json",
-      "Prefer": "return=representation",
-      ...(opts.headers || {})
-    };
-    const res = await fetch(url, { ...opts, headers });
+    const url = `${SUPABASE_URL}/rest/v1${path}`;
+    const res = await fetch(url, { ...opts, headers: { ...authHeaders(), ...(opts.headers || {}) } });
     if (!res.ok) throw new Error(`Supabase ${res.status}: ${await res.text()}`);
     if (res.status === 204) return null;
     return res.json();
   }
 
+  // Auth API calls
+  async function authCall(endpoint, body) {
+    const res = await fetch(`${SUPABASE_URL}/auth/v1${endpoint}`, {
+      method: "POST",
+      headers: { "apikey": SUPABASE_ANON_KEY, "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error_description || data.msg || data.error || "Auth failed");
+    return data;
+  }
+
+  async function signUp(email, password) {
+    const data = await authCall("/signup", { email, password });
+    if (data.access_token) {
+      setSession(data);
+    }
+    return data;
+  }
+
+  async function signIn(email, password) {
+    const data = await authCall("/token?grant_type=password", { email, password });
+    setSession(data);
+    return data;
+  }
+
+  function setSession(data) {
+    accessToken = data.access_token;
+    refreshToken = data.refresh_token;
+    currentUser = data.user;
+    localStorage.setItem("violate.session", JSON.stringify({ accessToken, refreshToken, user: currentUser }));
+  }
+
+  function clearSession() {
+    accessToken = null;
+    refreshToken = null;
+    currentUser = null;
+    localStorage.removeItem("violate.session");
+  }
+
+  function loadSession() {
+    try {
+      const s = JSON.parse(localStorage.getItem("violate.session"));
+      if (s && s.accessToken) {
+        accessToken = s.accessToken;
+        refreshToken = s.refreshToken;
+        currentUser = s.user;
+        return true;
+      }
+    } catch {}
+    return false;
+  }
+
+  async function tryRefreshToken() {
+    if (!refreshToken) return false;
+    try {
+      const data = await authCall("/token?grant_type=refresh_token", { refresh_token: refreshToken });
+      setSession(data);
+      return true;
+    } catch {
+      clearSession();
+      return false;
+    }
+  }
+
+  // Data calls
   async function sbList() {
-    return sbFetch(`/wishlist?device_id=eq.${encodeURIComponent(DEVICE_ID)}&order=created_at.desc`);
+    return sbFetch(`/wishlist?user_id=eq.${currentUser.id}&order=created_at.desc`);
   }
   async function sbInsert(row) {
     return sbFetch(`/wishlist`, { method: "POST", body: JSON.stringify(row) });
@@ -393,13 +468,9 @@
   async function sbDelete(id) {
     return sbFetch(`/wishlist?id=eq.${encodeURIComponent(id)}`, { method: "DELETE" });
   }
-
-  // ============================================================
-  //  Local cache
-  // ============================================================
-  const LOCAL_KEY = "violate.wishlist.v1";
-  function loadLocal() { try { return JSON.parse(localStorage.getItem(LOCAL_KEY) || "[]"); } catch { return []; } }
-  function saveLocal(items) { localStorage.setItem(LOCAL_KEY, JSON.stringify(items)); }
+  async function sbUpdate(id, patch) {
+    return sbFetch(`/wishlist?id=eq.${encodeURIComponent(id)}`, { method: "PATCH", body: JSON.stringify(patch) });
+  }
 
   // ============================================================
   //  AI suggest call
@@ -422,7 +493,7 @@
   let collapsed = {};
 
   function esc(s) { return String(s || "").replace(/[<>&"']/g, (c) => ({"<":"&lt;",">":"&gt;","&":"&amp;","\"":"&quot;","'":"&#39;"}[c])); }
-  function fmt(n) { return "₹" + Number(n || 0).toLocaleString('en-IN'); }
+  function fmt(n) { return "\u20B9" + Number(n || 0).toLocaleString('en-IN'); }
 
   function toast(msg) {
     const t = $("toast"); t.textContent = msg; t.classList.add("show");
@@ -440,9 +511,6 @@
     }));
   }
 
-  // ============================================================
-  //  Group items by category
-  // ============================================================
   function groupByCategory() {
     const cats = {};
     items.forEach((item) => {
@@ -452,6 +520,79 @@
     });
     return Object.entries(cats).sort(([a], [b]) => a.localeCompare(b));
   }
+
+  // ============================================================
+  //  Auth UI
+  // ============================================================
+  let isSignUp = false;
+
+  function showAuth() {
+    $("authPage").style.display = "block";
+    $("appMain").style.display = "none";
+    $("navBar").innerHTML = "";
+    updateAuthForm();
+  }
+
+  function showApp() {
+    $("authPage").style.display = "none";
+    $("appMain").style.display = "block";
+    const initials = (currentUser.email || "?").substring(0, 2).toUpperCase();
+    $("navBar").innerHTML = `
+      <span class="user-email">${esc(currentUser.email)}</span>
+      <a id="logoutBtn">Sign out</a>
+    `;
+    $("logoutBtn").onclick = () => { clearSession(); showAuth(); };
+  }
+
+  function updateAuthForm() {
+    $("authTitle").textContent = isSignUp ? "Create account" : "Sign in";
+    $("authSubmit").textContent = isSignUp ? "Sign up" : "Sign in";
+    $("authToggleText").textContent = isSignUp ? "Already have an account?" : "Don't have an account?";
+    $("authToggleLink").textContent = isSignUp ? "Sign in" : "Sign up";
+    $("authPassword").autocomplete = isSignUp ? "new-password" : "current-password";
+    $("authError").textContent = "";
+  }
+
+  $("authToggleLink").onclick = () => { isSignUp = !isSignUp; updateAuthForm(); };
+
+  $("authSubmit").onclick = async () => {
+    const email = $("authEmail").value.trim();
+    const password = $("authPassword").value;
+    $("authError").textContent = "";
+    if (!email || !password) { $("authError").textContent = "Email and password required."; return; }
+    if (password.length < 6) { $("authError").textContent = "Password must be at least 6 characters."; return; }
+
+    const btn = $("authSubmit");
+    btn.disabled = true;
+    try {
+      if (isSignUp) {
+        const data = await signUp(email, password);
+        if (!data.access_token) {
+          $("authError").textContent = "";
+          toast("Check your email to confirm your account, then sign in.");
+          isSignUp = false;
+          updateAuthForm();
+          return;
+        }
+      } else {
+        await signIn(email, password);
+      }
+      showApp();
+      bootstrap();
+    } catch (e) {
+      $("authError").textContent = e.message;
+    } finally {
+      btn.disabled = false;
+    }
+  };
+
+  // Enter key on password field
+  $("authPassword").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") $("authSubmit").click();
+  });
+  $("authEmail").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") $("authPassword").focus();
+  });
 
   // ============================================================
   //  Render
@@ -508,8 +649,8 @@
           <tbody>
           ${catItems.map((item, ii) => {
             const ai = item.ai || {};
-            const priceStr = ai.priceRange?.min ? `${fmt(ai.priceRange.min)} – ${fmt(ai.priceRange.max)}` : "—";
-            const bestVendor = (ai.bestVendors || [])[0] || "—";
+            const priceStr = ai.priceRange?.min ? `${fmt(ai.priceRange.min)} – ${fmt(ai.priceRange.max)}` : "\u2014";
+            const bestVendor = (ai.bestVendors || [])[0] || "\u2014";
             const vendorCount = VENDOR_ORDER.length;
             const vendors = buildVendorLinks(item);
             const altQs = (ai.alternateQueries || []).slice(0, 3);
@@ -529,7 +670,7 @@
                   ${vendors.map((v) => `
                     <a class="vendor-row ${v.recommended ? 'best' : ''}" href="${v.url}" target="_blank" rel="noopener">
                       <span>${v.name}${v.recommended ? ' <span class="badge">best</span>' : ''}</span>
-                      <span>→</span>
+                      <span>\u2192</span>
                     </a>
                   `).join('')}
                 </div>
@@ -549,43 +690,24 @@
           </tbody>
         </table>
       `;
-
-      // Category collapse toggle
       sec.querySelector('.cat-head').addEventListener('click', () => {
         collapsed[catName] = !collapsed[catName];
         sec.classList.toggle('collapsed');
       });
-
       root.appendChild(sec);
     });
 
-    // Event delegation for rows and actions
     root.addEventListener('click', (e) => {
       const row = e.target.closest('tr.row');
       const buyBtn = e.target.closest('[data-buy]');
       const refreshBtn = e.target.closest('[data-refresh]');
       const deleteBtn = e.target.closest('[data-delete]');
 
-      if (buyBtn) {
-        e.stopPropagation();
-        window.open(buyBtn.dataset.buy, '_blank');
-        return;
-      }
-      if (refreshBtn) {
-        e.stopPropagation();
-        const item = items.find((i) => i.id === refreshBtn.dataset.refresh);
-        if (item) refreshItem(item);
-        return;
-      }
-      if (deleteBtn) {
-        e.stopPropagation();
-        const item = items.find((i) => i.id === deleteBtn.dataset.delete);
-        if (item) removeItem(item);
-        return;
-      }
+      if (buyBtn) { e.stopPropagation(); window.open(buyBtn.dataset.buy, '_blank'); return; }
+      if (refreshBtn) { e.stopPropagation(); const it = items.find((i) => i.id === refreshBtn.dataset.refresh); if (it) refreshItem(it); return; }
+      if (deleteBtn) { e.stopPropagation(); const it = items.find((i) => i.id === deleteBtn.dataset.delete); if (it) removeItem(it); return; }
       if (row) {
-        const detailId = row.dataset.detail;
-        const d = document.getElementById(detailId);
+        const d = document.getElementById(row.dataset.detail);
         if (d) d.style.display = d.style.display === 'table-row' ? 'none' : 'table-row';
       }
     });
@@ -603,16 +725,10 @@
 
     try {
       const ai = await aiSuggest(q, notes);
-      const row = { device_id: DEVICE_ID, query: q, notes: notes || null, ai };
-      let saved = null;
-      if (SB_OK) {
-        const ins = await sbInsert(row);
-        saved = ins && ins[0] ? ins[0] : { ...row, id: crypto.randomUUID(), created_at: new Date().toISOString() };
-      } else {
-        saved = { ...row, id: crypto.randomUUID(), created_at: new Date().toISOString() };
-      }
+      const row = { user_id: currentUser.id, query: q, notes: notes || null, ai };
+      const ins = await sbInsert(row);
+      const saved = ins && ins[0] ? ins[0] : { ...row, id: crypto.randomUUID(), created_at: new Date().toISOString() };
       items.unshift(saved);
-      saveLocal(items);
       $("q").value = ""; $("notes").value = "";
       render();
       toast("Added");
@@ -626,11 +742,8 @@
 
   async function removeItem(item) {
     items = items.filter((i) => i.id !== item.id);
-    saveLocal(items);
     render();
-    if (SB_OK && item.id) {
-      try { await sbDelete(item.id); } catch (e) { console.error(e); }
-    }
+    try { await sbDelete(item.id); } catch (e) { console.error(e); }
     toast("Removed");
   }
 
@@ -639,15 +752,7 @@
     try {
       const ai = await aiSuggest(item.query, item.notes);
       item.ai = ai;
-      saveLocal(items);
-      if (SB_OK && item.id) {
-        try {
-          await sbFetch(`/wishlist?id=eq.${encodeURIComponent(item.id)}`, {
-            method: "PATCH",
-            body: JSON.stringify({ ai })
-          });
-        } catch (e) { console.error(e); }
-      }
+      try { await sbUpdate(item.id, { ai }); } catch (e) { console.error(e); }
       render();
       toast("Updated");
     } catch (e) {
@@ -658,9 +763,9 @@
   // ============================================================
   //  Bulk add
   // ============================================================
-  window.openBulk = () => $("bulkModal").classList.add("show");
-  window.closeBulk = () => $("bulkModal").classList.remove("show");
-  window.bulkAdd = async () => {
+  $("bulkOpenBtn").onclick = () => $("bulkModal").classList.add("show");
+  $("bulkCancelBtn").onclick = () => $("bulkModal").classList.remove("show");
+  $("bulkGoBtn").onclick = async () => {
     const lines = $("bulkText").value.split("\n").map((l) => l.trim()).filter(Boolean);
     if (!lines.length) return;
     const btn = $("bulkGoBtn");
@@ -668,24 +773,16 @@
     for (const line of lines) {
       try {
         const ai = await aiSuggest(line, "");
-        const row = { device_id: DEVICE_ID, query: line, notes: null, ai };
-        let saved;
-        if (SB_OK) {
-          const ins = await sbInsert(row);
-          saved = ins && ins[0] ? ins[0] : { ...row, id: crypto.randomUUID(), created_at: new Date().toISOString() };
-        } else {
-          saved = { ...row, id: crypto.randomUUID(), created_at: new Date().toISOString() };
-        }
+        const row = { user_id: currentUser.id, query: line, notes: null, ai };
+        const ins = await sbInsert(row);
+        const saved = ins && ins[0] ? ins[0] : { ...row, id: crypto.randomUUID(), created_at: new Date().toISOString() };
         items.unshift(saved);
-        saveLocal(items);
         render();
-      } catch (e) {
-        console.error("Bulk add failed for:", line, e);
-      }
+      } catch (e) { console.error("Bulk add failed for:", line, e); }
     }
     btn.disabled = false; btn.textContent = "Find prices";
     $("bulkText").value = "";
-    closeBulk();
+    $("bulkModal").classList.remove("show");
     toast(`Added ${lines.length} items`);
   };
 
@@ -693,27 +790,37 @@
   //  Bootstrap
   // ============================================================
   async function bootstrap() {
-    items = loadLocal();
-    render();
-    if (SB_OK) {
-      try {
-        const cloud = await sbList();
-        if (Array.isArray(cloud)) {
-          items = cloud;
-          saveLocal(items);
-          render();
-        }
-      } catch (e) {
-        console.warn("Supabase fetch failed, using local cache.", e);
+    try {
+      const cloud = await sbList();
+      if (Array.isArray(cloud)) {
+        items = cloud;
+        render();
+      }
+    } catch (e) {
+      console.error("Failed to load wishlist:", e);
+      // If token expired, try refresh
+      if (e.message?.includes("401") || e.message?.includes("JWT")) {
+        const ok = await tryRefreshToken();
+        if (ok) { bootstrap(); return; }
+        clearSession();
+        showAuth();
+        toast("Session expired. Please sign in again.");
       }
     }
   }
 
   $("addBtn").onclick = addItem;
   $("q").addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); addItem(); } });
-  $("syncBtn").onclick = bootstrap;
 
-  bootstrap();
+  // ============================================================
+  //  Init — check for existing session
+  // ============================================================
+  if (loadSession()) {
+    showApp();
+    bootstrap();
+  } else {
+    showAuth();
+  }
 </script>
 
 </body>
