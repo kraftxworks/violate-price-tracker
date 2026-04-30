@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>VIOLATE — Price Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #f4efe6;
+    --ink: #1a1715;
+    --ink-soft: #5a5048;
+    --line: #d6cdbf;
+    --accent: #b3321a;
+    --accent-soft: #f0d9d3;
+    --card: #ffffff;
+    --shadow: 0 1px 0 rgba(26,23,21,0.04), 0 8px 24px rgba(26,23,21,0.06);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: var(--bg); color: var(--ink); font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+  body { min-height: 100vh; padding-bottom: 80px; }
+  .mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
+
+  header.brand {
+    border-bottom: 1px solid var(--line);
+    padding: 22px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; background: var(--bg); z-index: 10;
+  }
+  .brand h1 { font-family: 'IBM Plex Mono', monospace; font-weight: 700; letter-spacing: 6px; font-size: 22px; color: var(--accent); }
+  .brand .tag { font-size: 11px; letter-spacing: 2px; color: var(--ink-soft); text-transform: uppercase; }
+
+  main { max-width: 920px; margin: 0 auto; padding: 32px 20px; }
+
+  .hero { margin-bottom: 28px; }
+  .hero .eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+  .hero h2 { font-family: 'IBM Plex Mono', monospace; font-size: 36px; line-height: 1.1; font-weight: 600; letter-spacing: -0.5px; margin-bottom: 8px; }
+  .hero p { color: var(--ink-soft); font-size: 15px; max-width: 540px; }
+
+  .add-card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px;
+    box-shadow: var(--shadow); margin-bottom: 28px;
+  }
+  .add-card .row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .add-card input[type=text] {
+    flex: 1; min-width: 220px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px;
+    font: 15px/1.4 'Inter', sans-serif; background: #fff; color: var(--ink);
+  }
+  .add-card input[type=text]:focus { outline: 2px solid var(--accent); outline-offset: -1px; border-color: var(--accent); }
+  .add-card textarea {
+    width: 100%; padding: 10px 14px; border: 1px solid var(--line); border-radius: 10px;
+    font: 14px/1.4 'Inter', sans-serif; background: #fff; resize: vertical; min-height: 60px; margin-top: 10px;
+  }
+  .add-card textarea:focus { outline: 2px solid var(--accent); outline-offset: -1px; border-color: var(--accent); }
+
+  button.primary {
+    background: var(--ink); color: #fff; border: 0; padding: 12px 20px; border-radius: 10px;
+    font: 600 14px 'IBM Plex Mono', monospace; letter-spacing: 1.2px; cursor: pointer; text-transform: uppercase;
+    transition: transform 0.05s ease, background 0.15s ease;
+  }
+  button.primary:hover { background: var(--accent); }
+  button.primary:active { transform: translateY(1px); }
+  button.primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  button.ghost {
+    background: transparent; color: var(--ink-soft); border: 1px solid var(--line); padding: 8px 12px; border-radius: 8px;
+    font: 500 12px 'IBM Plex Mono', monospace; letter-spacing: 1px; cursor: pointer; text-transform: uppercase;
+  }
+  button.ghost:hover { color: var(--accent); border-color: var(--accent); }
+
+  .empty {
+    background: #fff; border: 1px dashed var(--line); border-radius: 14px; padding: 40px 20px; text-align: center;
+    color: var(--ink-soft);
+  }
+  .empty .em { font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; }
+
+  .item {
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; margin-bottom: 14px;
+    box-shadow: var(--shadow);
+  }
+  .item .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+  .item h3 { font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 18px; letter-spacing: -0.2px; }
+  .item .meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 6px; }
+  .pill { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; padding: 4px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+  .pill.muted { background: #efeae0; color: var(--ink-soft); }
+  .price-bar { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--ink-soft); }
+  .price-bar strong { color: var(--ink); font-weight: 600; }
+  .notes { color: var(--ink-soft); font-size: 13px; margin-top: 8px; font-style: italic; }
+  .reasoning { color: var(--ink-soft); font-size: 12px; margin-top: 8px; }
+
+  .vendors { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; margin-top: 14px; }
+  .vendor-link {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px;
+    text-decoration: none; color: var(--ink); background: #fff; font: 500 13px 'Inter', sans-serif;
+    transition: all 0.15s ease;
+  }
+  .vendor-link:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+  .vendor-link.recommended { border-color: var(--accent); }
+  .vendor-link .arrow { font-family: 'IBM Plex Mono', monospace; opacity: 0.4; }
+  .vendor-link:hover .arrow { opacity: 1; }
+
+  .alt-queries { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .alt-queries .label { font: 500 11px 'IBM Plex Mono', monospace; color: var(--ink-soft); letter-spacing: 1px; text-transform: uppercase; margin-right: 4px; align-self: center; }
+  .alt-queries a { font: 500 12px 'IBM Plex Mono', monospace; padding: 4px 8px; border-radius: 6px; background: #efeae0; color: var(--ink-soft); text-decoration: none; }
+  .alt-queries a:hover { background: var(--accent-soft); color: var(--accent); }
+
+  .actions-row { display: flex; gap: 8px; margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--line); }
+
+  .toast {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    background: var(--ink); color: #fff; padding: 10px 18px; border-radius: 999px; font: 500 13px 'IBM Plex Mono', monospace;
+    letter-spacing: 1px; opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
+    z-index: 100;
+  }
+  .toast.show { opacity: 1; }
+
+  .config-warning {
+    background: #fff4e6; border: 1px solid #f0c987; border-radius: 10px; padding: 14px 16px; margin-bottom: 20px;
+    font-size: 13px; color: #7a4f10;
+  }
+  .config-warning code { background: #fce6c0; padding: 2px 6px; border-radius: 4px; font-family: 'IBM Plex Mono', monospace; }
+
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .filter-chip {
+    font: 500 11px 'IBM Plex Mono', monospace; letter-spacing: 1px; text-transform: uppercase;
+    padding: 6px 10px; border-radius: 999px; background: #fff; border: 1px solid var(--line);
+    cursor: pointer; color: var(--ink-soft);
+  }
+  .filter-chip.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+  @media (max-width: 600px) {
+    .hero h2 { font-size: 26px; }
+    .add-card .row { flex-direction: column; }
+    .vendors { grid-template-columns: 1fr 1fr; }
+  }
+
+  .loader { display: inline-block; width: 14px; height: 14px; border: 2px solid currentColor; border-top-color: transparent; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 6px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<header class="brand">
+  <div>
+    <h1>VIOLATE</h1>
+    <div class="tag">Price Tracker</div>
+  </div>
+  <button class="ghost" id="syncBtn" title="Force re-sync from cloud">Sync</button>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="eyebrow">Bucket list × shopping</div>
+    <h2>Want it now. Find it cheap.</h2>
+    <p>Drop anything you're hunting. The AI figures out the best vendors and gives you live search links. Saved across your devices.</p>
+  </div>
+
+  <div id="configWarning" class="config-warning" style="display:none;">
+    <strong>Setup needed.</strong> Configure your <code>SUPABASE_URL</code> and <code>SUPABASE_ANON_KEY</code> in this file (search for <code>SUPABASE_CONFIG</code>) and deploy <code>/api/suggest</code> with a <code>GEMINI_API_KEY</code> on Vercel. See README.
+  </div>
+
+  <div class="add-card">
+    <div class="row">
+      <input type="text" id="q" placeholder="e.g. oversized vintage band tee, black" autocomplete="off" />
+      <button class="primary" id="addBtn">Add</button>
+    </div>
+    <textarea id="notes" placeholder="Optional notes (size, colour, budget, brand vibe)..."></textarea>
+  </div>
+
+  <div class="filters" id="filters" style="display:none;"></div>
+
+  <div id="list"></div>
+  <div id="empty" class="empty" style="display:none;">
+    <div class="em">Wishlist empty</div>
+    <div style="margin-top:8px;font-size:14px;">Add the first thing you want.</div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+  // ============================================================
+  //  CONFIG — fill these in
+  // ============================================================
+  const SUPABASE_CONFIG = {
+    url: "https://cqlyqyuvinhlyyqwbcdt.supabase.co",
+    anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxbHlxeXV2aW5obHl5cXdiY2R0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0NjM5NjUsImV4cCI6MjA5MzAzOTk2NX0.r-KzoMe7HlYg8jVS1T4u1Zcyk4Ten9VTIo4-oAU3trM"
+  };
+  const SUGGEST_ENDPOINT = "/api/suggest"; // same-origin Vercel function
+
+  // ============================================================
+  //  Vendor URL templates (no scraping — just smart deep links)
+  // ============================================================
+  const VENDORS = {
+    "Amazon":        (q) => `https://www.amazon.in/s?k=${encodeURIComponent(q)}`,
+    "Flipkart":      (q) => `https://www.flipkart.com/search?q=${encodeURIComponent(q)}`,
+    "Myntra":        (q) => `https://www.myntra.com/${encodeURIComponent(q.trim().replace(/\s+/g, "-").toLowerCase())}?rawQuery=${encodeURIComponent(q)}`,
+    "Ajio":          (q) => `https://www.ajio.com/search/?text=${encodeURIComponent(q)}`,
+    "Meesho":        (q) => `https://www.meesho.com/search?q=${encodeURIComponent(q)}`,
+    "Nykaa Fashion": (q) => `https://www.nykaafashion.com/search/?q=${encodeURIComponent(q)}`
+  };
+  const VENDOR_ORDER = ["Amazon", "Flipkart", "Myntra", "Ajio", "Meesho", "Nykaa Fashion"];
+
+  // ============================================================
+  //  Anonymous device id (no auth required)
+  // ============================================================
+  function getDeviceId() {
+    let id = localStorage.getItem("violate.deviceId");
+    if (!id) {
+      id = "v_" + (crypto.randomUUID ? crypto.randomUUID() : Date.now() + "_" + Math.random().toString(36).slice(2));
+      localStorage.setItem("violate.deviceId", id);
+    }
+    return id;
+  }
+  const DEVICE_ID = getDeviceId();
+
+  // ============================================================
+  //  Supabase REST helpers (no SDK — keeps the page tiny)
+  // ============================================================
+  const SB_OK = !SUPABASE_CONFIG.url.includes("YOUR-PROJECT") && !SUPABASE_CONFIG.anonKey.includes("YOUR-");
+  if (!SB_OK) document.getElementById("configWarning").style.display = "block";
+
+  async function sbFetch(path, opts = {}) {
+    if (!SB_OK) throw new Error("Supabase not configured");
+    const url = `${SUPABASE_CONFIG.url}/rest/v1${path}`;
+    const headers = {
+      "apikey": SUPABASE_CONFIG.anonKey,
+      "Authorization": `Bearer ${SUPABASE_CONFIG.anonKey}`,
+      "Content-Type": "application/json",
+      "Prefer": "return=representation",
+      ...(opts.headers || {})
+    };
+    const res = await fetch(url, { ...opts, headers });
+    if (!res.ok) throw new Error(`Supabase ${res.status}: ${await res.text()}`);
+    if (res.status === 204) return null;
+    return res.json();
+  }
+
+  async function sbList() {
+    return sbFetch(`/wishlist?device_id=eq.${encodeURIComponent(DEVICE_ID)}&order=created_at.desc`);
+  }
+  async function sbInsert(row) {
+    return sbFetch(`/wishlist`, { method: "POST", body: JSON.stringify(row) });
+  }
+  async function sbDelete(id) {
+    return sbFetch(`/wishlist?id=eq.${encodeURIComponent(id)}`, { method: "DELETE" });
+  }
+
+  // ============================================================
+  //  Local cache (so app works offline + before Supabase set up)
+  // ============================================================
+  const LOCAL_KEY = "violate.wishlist.v1";
+  function loadLocal() { try { return JSON.parse(localStorage.getItem(LOCAL_KEY) || "[]"); } catch { return []; } }
+  function saveLocal(items) { localStorage.setItem(LOCAL_KEY, JSON.stringify(items)); }
+
+  // ============================================================
+  //  AI suggest call
+  // ============================================================
+  async function aiSuggest(query, notes) {
+    const r = await fetch(SUGGEST_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query, notes })
+    });
+    if (!r.ok) throw new Error(`Suggest ${r.status}: ${await r.text()}`);
+    return r.json();
+  }
+
+  // ============================================================
+  //  UI
+  // ============================================================
+  const $ = (id) => document.getElementById(id);
+  const list = $("list");
+  const empty = $("empty");
+  const filtersEl = $("filters");
+
+  let items = [];
+  let activeCategory = "All";
+
+  function toast(msg) {
+    const t = $("toast"); t.textContent = msg; t.classList.add("show");
+    clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("show"), 2200);
+  }
+
+  function buildVendorLinks(item) {
+    const q = item.ai?.name || item.query || "";
+    const ranked = (item.ai?.bestVendors || []).filter((v) => VENDORS[v]);
+    const rest = VENDOR_ORDER.filter((v) => !ranked.includes(v));
+    const finalOrder = [...ranked, ...rest];
+    return finalOrder.map((v) => ({
+      name: v,
+      url: VENDORS[v](q),
+      recommended: ranked.includes(v)
+    }));
+  }
+
+  function renderFilters() {
+    const cats = Array.from(new Set(items.map((i) => i.ai?.category || "Other"))).sort();
+    if (cats.length <= 1) { filtersEl.style.display = "none"; return; }
+    filtersEl.style.display = "flex";
+    filtersEl.innerHTML = "";
+    ["All", ...cats].forEach((c) => {
+      const chip = document.createElement("button");
+      chip.className = "filter-chip" + (c === activeCategory ? " active" : "");
+      chip.textContent = c;
+      chip.onclick = () => { activeCategory = c; render(); };
+      filtersEl.appendChild(chip);
+    });
+  }
+
+  function render() {
+    list.innerHTML = "";
+    const visible = items.filter((i) => activeCategory === "All" || (i.ai?.category || "Other") === activeCategory);
+    if (visible.length === 0) {
+      empty.style.display = "block";
+    } else {
+      empty.style.display = "none";
+      visible.forEach((item) => list.appendChild(card(item)));
+    }
+    renderFilters();
+  }
+
+  function card(item) {
+    const el = document.createElement("div");
+    el.className = "item";
+    const ai = item.ai || {};
+    const range = ai.priceRange && (ai.priceRange.min || ai.priceRange.max)
+      ? `<div class="price-bar">Est. <strong>₹${(ai.priceRange.min || 0).toLocaleString("en-IN")}</strong> – <strong>₹${(ai.priceRange.max || 0).toLocaleString("en-IN")}</strong></div>`
+      : "";
+    const altQs = (ai.alternateQueries || []).slice(0, 3);
+    const altHtml = altQs.length ? `
+      <div class="alt-queries">
+        <span class="label">Try also</span>
+        ${altQs.map((q) => `<a href="${VENDORS["Amazon"](q)}" target="_blank" rel="noopener">${escape(q)}</a>`).join("")}
+      </div>` : "";
+    const vendors = buildVendorLinks(item);
+    el.innerHTML = `
+      <div class="top">
+        <div>
+          <h3>${escape(ai.name || item.query)}</h3>
+          <div class="meta">
+            <span class="pill">${escape(ai.category || "Other")}</span>
+            ${range}
+          </div>
+        </div>
+      </div>
+      ${item.notes ? `<div class="notes">"${escape(item.notes)}"</div>` : ""}
+      ${ai.reasoning ? `<div class="reasoning">${escape(ai.reasoning)}</div>` : ""}
+      <div class="vendors">
+        ${vendors.map((v) => `<a class="vendor-link ${v.recommended ? "recommended" : ""}" href="${v.url}" target="_blank" rel="noopener">
+          <span>${v.name}</span><span class="arrow">→</span>
+        </a>`).join("")}
+      </div>
+      ${altHtml}
+      <div class="actions-row">
+        <button class="ghost" data-action="refresh">Re-suggest</button>
+        <button class="ghost" data-action="delete">Delete</button>
+      </div>
+    `;
+    el.querySelector('[data-action="delete"]').onclick = () => removeItem(item);
+    el.querySelector('[data-action="refresh"]').onclick = () => refreshItem(item);
+    return el;
+  }
+
+  function escape(s) { return String(s || "").replace(/[<>&"']/g, (c) => ({"<":"&lt;",">":"&gt;","&":"&amp;","\"":"&quot;","'":"&#39;"}[c])); }
+
+  // ============================================================
+  //  Mutations
+  // ============================================================
+  async function addItem() {
+    const q = $("q").value.trim();
+    const notes = $("notes").value.trim();
+    if (!q) return;
+    const btn = $("addBtn");
+    btn.disabled = true; btn.innerHTML = '<span class="loader"></span>Thinking';
+
+    try {
+      const ai = await aiSuggest(q, notes);
+      const row = {
+        device_id: DEVICE_ID,
+        query: q,
+        notes: notes || null,
+        ai
+      };
+      let saved = null;
+      if (SB_OK) {
+        const ins = await sbInsert(row);
+        saved = ins && ins[0] ? ins[0] : { ...row, id: crypto.randomUUID(), created_at: new Date().toISOString() };
+      } else {
+        saved = { ...row, id: crypto.randomUUID(), created_at: new Date().toISOString() };
+      }
+      items.unshift(saved);
+      saveLocal(items);
+      $("q").value = ""; $("notes").value = "";
+      render();
+      toast("Added");
+    } catch (e) {
+      console.error(e);
+      toast("Failed: " + (e.message || "error"));
+    } finally {
+      btn.disabled = false; btn.textContent = "Add";
+    }
+  }
+
+  async function removeItem(item) {
+    items = items.filter((i) => i.id !== item.id);
+    saveLocal(items);
+    render();
+    if (SB_OK && item.id && !item.id.startsWith("v_local")) {
+      try { await sbDelete(item.id); } catch (e) { console.error(e); }
+    }
+    toast("Removed");
+  }
+
+  async function refreshItem(item) {
+    toast("Re-running AI...");
+    try {
+      const ai = await aiSuggest(item.query, item.notes);
+      item.ai = ai;
+      saveLocal(items);
+      if (SB_OK && item.id) {
+        try {
+          await sbFetch(`/wishlist?id=eq.${encodeURIComponent(item.id)}`, {
+            method: "PATCH",
+            body: JSON.stringify({ ai })
+          });
+        } catch (e) { console.error(e); }
+      }
+      render();
+      toast("Updated");
+    } catch (e) {
+      toast("Failed: " + e.message);
+    }
+  }
+
+  async function bootstrap() {
+    items = loadLocal();
+    render();
+    if (SB_OK) {
+      try {
+        const cloud = await sbList();
+        if (Array.isArray(cloud)) {
+          items = cloud;
+          saveLocal(items);
+          render();
+        }
+      } catch (e) {
+        console.warn("Supabase fetch failed, using local cache.", e);
+      }
+    }
+  }
+
+  $("addBtn").onclick = addItem;
+  $("q").addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); addItem(); } });
+  $("syncBtn").onclick = bootstrap;
+
+  bootstrap();
+</script>
+
+</body>
+</html>
