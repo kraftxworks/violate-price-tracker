@@ -19,128 +19,87 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: var(--bg);
-    color: var(--fg);
-    font-size: 13px;
-    line-height: 1.45;
+    background: var(--bg); color: var(--fg);
+    font-size: 13px; line-height: 1.45;
     -webkit-font-smoothing: antialiased;
   }
   header {
     border-bottom: 1px solid var(--line);
     padding: 12px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    background: #fff;
-    z-index: 10;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; background: #fff; z-index: 10;
   }
   .logo { font-weight: 700; font-size: 17px; letter-spacing: -0.4px; }
   .logo small { color: var(--muted); font-weight: 400; font-size: 12px; margin-left: 10px; }
   .nav { display: flex; gap: 12px; font-size: 13px; align-items: center; }
+  .nav span { color: var(--muted); font-size: 12px; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .nav a { color: var(--muted); text-decoration: none; cursor: pointer; }
   .nav a:hover { color: var(--fg); }
-  .avatar { width: 26px; height: 26px; border-radius: 50%; background: #111; color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; cursor: pointer; }
-  .user-email { font-size: 12px; color: var(--muted); max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
   main { max-width: 1080px; margin: 0 auto; padding: 22px 24px 60px; }
 
-  /* Auth form */
-  .auth-page { max-width: 380px; margin: 80px auto; padding: 0 20px; }
-  .auth-page h2 { font-size: 22px; margin-bottom: 4px; }
-  .auth-page p.sub { color: var(--muted); font-size: 13px; margin-bottom: 20px; }
+  /* Auth */
+  .auth-page { max-width: 360px; margin: 70px auto; padding: 0 20px; }
+  .auth-page h2 { font-size: 20px; margin-bottom: 4px; }
+  .auth-page p.sub { color: var(--muted); font-size: 13px; margin-bottom: 22px; }
   .auth-form { display: flex; flex-direction: column; gap: 10px; }
   .auth-form input {
-    padding: 10px 12px;
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    font-size: 13px;
-    font-family: inherit;
+    padding: 10px 12px; border: 1px solid var(--line);
+    border-radius: 6px; font-size: 13px; font-family: inherit;
   }
   .auth-form input:focus { outline: none; border-color: var(--fg); }
-  .auth-form .btn { width: 100%; text-align: center; }
-  .auth-toggle { margin-top: 12px; font-size: 12px; color: var(--muted); text-align: center; }
-  .auth-toggle a { color: var(--fg); font-weight: 500; cursor: pointer; text-decoration: none; }
-  .auth-error { color: var(--warn); font-size: 12px; min-height: 18px; }
+  .auth-error { color: var(--warn); font-size: 12px; min-height: 16px; }
+  .auth-divider { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 12px; margin: 4px 0; }
+  .auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+  .auth-toggle { margin-top: 14px; font-size: 12px; color: var(--muted); text-align: center; }
+  .auth-toggle a { color: var(--fg); font-weight: 500; cursor: pointer; }
 
-  /* Add bar */
-  .add-bar {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 8px;
-    align-items: center;
-  }
-  .add-bar input[type=text] {
-    flex: 1;
-    padding: 9px 12px;
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    font-size: 13px;
-    font-family: inherit;
-  }
-  .add-bar input:focus { outline: none; border-color: var(--fg); }
   .btn {
-    padding: 9px 14px;
-    border: 1px solid var(--fg);
-    background: var(--fg);
-    color: #fff;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 13px;
-    font-family: inherit;
-    font-weight: 500;
+    padding: 9px 14px; border: 1px solid var(--fg);
+    background: var(--fg); color: #fff; border-radius: 6px;
+    cursor: pointer; font-size: 13px; font-family: inherit; font-weight: 500;
   }
   .btn:hover { opacity: 0.88; }
   .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-  .btn-ghost {
-    background: #fff;
-    color: var(--fg);
+  .btn-ghost { background: #fff; color: var(--fg); }
+  .btn-google {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    padding: 10px 14px; border: 1px solid var(--line);
+    background: #fff; color: var(--fg); border-radius: 6px;
+    cursor: pointer; font-size: 13px; font-family: inherit; font-weight: 500;
+    width: 100%;
   }
+  .btn-google:hover { border-color: #aaa; background: var(--soft); }
+  .btn-google svg { flex-shrink: 0; }
 
+  /* App */
+  .add-bar { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
+  .add-bar input[type=text] {
+    flex: 1; padding: 9px 12px; border: 1px solid var(--line);
+    border-radius: 6px; font-size: 13px; font-family: inherit;
+  }
+  .add-bar input:focus { outline: none; border-color: var(--fg); }
   .notes-bar { margin-bottom: 18px; }
   .notes-bar textarea {
-    width: 100%;
-    padding: 8px 12px;
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    font-size: 13px;
-    font-family: inherit;
-    resize: vertical;
-    min-height: 36px;
+    width: 100%; padding: 8px 12px; border: 1px solid var(--line);
+    border-radius: 6px; font-size: 13px; font-family: inherit;
+    resize: vertical; min-height: 36px;
   }
   .notes-bar textarea:focus { outline: none; border-color: var(--fg); }
 
   .meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 22px;
-    color: var(--muted);
-    font-size: 12px;
-    padding: 10px 14px;
-    background: var(--soft);
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    margin-bottom: 18px;
+    display: flex; flex-wrap: wrap; gap: 22px;
+    color: var(--muted); font-size: 12px;
+    padding: 10px 14px; background: var(--soft);
+    border: 1px solid var(--line); border-radius: 6px; margin-bottom: 18px;
   }
   .meta strong { color: var(--fg); font-weight: 600; }
 
-  .category {
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    margin-bottom: 10px;
-    overflow: hidden;
-    background: #fff;
-  }
+  .category { border: 1px solid var(--line); border-radius: 8px; margin-bottom: 10px; overflow: hidden; background: #fff; }
   .cat-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 9px 14px;
-    background: var(--soft);
-    cursor: pointer;
-    border-bottom: 1px solid var(--line);
-    user-select: none;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 9px 14px; background: var(--soft); cursor: pointer;
+    border-bottom: 1px solid var(--line); user-select: none;
   }
   .cat-head:hover { background: #f3f3f3; }
   .cat-name { font-weight: 600; font-size: 13px; }
@@ -150,136 +109,49 @@
   .category.collapsed table { display: none; }
 
   table { width: 100%; border-collapse: collapse; }
-  th, td {
-    text-align: left;
-    padding: 7px 14px;
-    border-bottom: 1px solid var(--line);
-    font-size: 13px;
-    vertical-align: middle;
-  }
-  th {
-    font-weight: 500;
-    color: var(--muted);
-    font-size: 10.5px;
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
-    background: #fff;
-  }
+  th, td { text-align: left; padding: 7px 14px; border-bottom: 1px solid var(--line); font-size: 13px; vertical-align: middle; }
+  th { font-weight: 500; color: var(--muted); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.6px; background: #fff; }
   tr:last-child td { border-bottom: none; }
   tbody tr.row { cursor: pointer; }
   tbody tr.row:hover { background: var(--hover); }
 
   .price { font-weight: 600; font-variant-numeric: tabular-nums; }
-  .vendor { color: var(--muted); font-size: 12px; }
-  .badge {
-    display: inline-block;
-    background: var(--accent);
-    color: #fff;
-    padding: 1px 5px;
-    border-radius: 3px;
-    font-size: 9.5px;
-    margin-left: 5px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-    vertical-align: 1px;
-  }
+  .vendor-cell { color: var(--muted); font-size: 12px; }
+  .badge { display: inline-block; background: var(--accent); color: #fff; padding: 1px 5px; border-radius: 3px; font-size: 9.5px; margin-left: 5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; vertical-align: 1px; }
   .badge.muted { background: #aaa; }
 
-  .action-link {
-    color: var(--muted);
-    text-decoration: none;
-    font-size: 12px;
-    border: 1px solid var(--line);
-    padding: 3px 8px;
-    border-radius: 4px;
-    cursor: pointer;
-    background: none;
-    font-family: inherit;
-  }
+  .action-link { color: var(--muted); font-size: 12px; border: 1px solid var(--line); padding: 3px 8px; border-radius: 4px; cursor: pointer; background: none; font-family: inherit; }
   .action-link:hover { color: var(--fg); border-color: var(--fg); }
   .action-link.danger:hover { color: var(--warn); border-color: var(--warn); }
 
   tr.detail-row td { background: var(--soft); padding: 12px 14px; }
-  .vendor-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 6px;
-  }
+  .vendor-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 6px; }
   .vendor-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 6px 10px;
-    background: #fff;
-    border: 1px solid var(--line);
-    border-radius: 4px;
-    font-size: 12px;
-    text-decoration: none;
-    color: var(--fg);
-    transition: border-color 0.15s;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 6px 10px; background: #fff; border: 1px solid var(--line);
+    border-radius: 4px; font-size: 12px; text-decoration: none; color: var(--fg); transition: border-color 0.15s;
   }
   .vendor-row:hover { border-color: var(--fg); }
   .vendor-row.best { border-color: var(--accent); }
 
-  .detail-meta { margin-top: 8px; font-size: 12px; color: var(--muted); }
-  .detail-meta .reasoning { font-style: italic; }
+  .detail-meta { margin-top: 8px; font-size: 12px; color: var(--muted); font-style: italic; }
   .detail-actions { margin-top: 8px; display: flex; gap: 6px; }
-
   .alt-queries { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
   .alt-queries .label { font-size: 11px; color: var(--muted); margin-right: 4px; }
-  .alt-tag {
-    font-size: 11px; padding: 2px 7px; border-radius: 4px;
-    background: #f0f0f0; color: var(--muted); text-decoration: none;
-  }
+  .alt-tag { font-size: 11px; padding: 2px 7px; border-radius: 4px; background: #f0f0f0; color: var(--muted); text-decoration: none; }
   .alt-tag:hover { background: #e0e0e0; color: var(--fg); }
 
-  /* modal */
-  .modal-bg {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.4);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 50;
-  }
+  .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: none; align-items: center; justify-content: center; z-index: 50; }
   .modal-bg.show { display: flex; }
-  .modal {
-    background: #fff;
-    border-radius: 8px;
-    padding: 20px;
-    width: 480px;
-    max-width: 92vw;
-  }
+  .modal { background: #fff; border-radius: 8px; padding: 20px; width: 480px; max-width: 92vw; }
   .modal h3 { margin-bottom: 6px; font-size: 15px; }
   .modal p.helper { color: var(--muted); font-size: 12px; margin-bottom: 12px; }
-  .modal textarea {
-    width: 100%;
-    min-height: 130px;
-    padding: 10px;
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    font-family: inherit;
-    font-size: 13px;
-    resize: vertical;
-  }
+  .modal textarea { width: 100%; min-height: 130px; padding: 10px; border: 1px solid var(--line); border-radius: 6px; font-family: inherit; font-size: 13px; resize: vertical; }
   .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; }
 
-  .empty-state {
-    padding: 40px 14px;
-    color: var(--muted);
-    font-size: 13px;
-    text-align: center;
-    border: 1px dashed var(--line);
-    border-radius: 8px;
-  }
+  .empty-state { padding: 40px 14px; color: var(--muted); font-size: 13px; text-align: center; border: 1px dashed var(--line); border-radius: 8px; }
 
-  .toast {
-    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-    background: var(--fg); color: #fff; padding: 8px 16px; border-radius: 999px;
-    font-size: 12px; font-weight: 500; opacity: 0; pointer-events: none;
-    transition: opacity 0.2s ease; z-index: 100;
-  }
+  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--fg); color: #fff; padding: 8px 16px; border-radius: 999px; font-size: 12px; font-weight: 500; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; z-index: 100; }
   .toast.show { opacity: 1; }
 
   .loader { display: inline-block; width: 12px; height: 12px; border: 2px solid currentColor; border-top-color: transparent; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 4px; }
@@ -299,46 +171,50 @@
   <nav class="nav" id="navBar"></nav>
 </header>
 
-<!-- Auth page (shown when logged out) -->
+<!-- Auth -->
 <div id="authPage" class="auth-page" style="display:none;">
   <h2 id="authTitle">Sign in</h2>
   <p class="sub">Save your wishlist across all your devices.</p>
-  <div class="auth-form" id="authForm">
+
+  <button class="btn-google" id="googleBtn">
+    <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.859-3.048.859-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.706A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.706V4.962H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.038l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.962L3.964 7.294C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+    Continue with Google
+  </button>
+
+  <div class="auth-divider">or</div>
+
+  <div class="auth-form">
     <input type="email" id="authEmail" placeholder="Email" autocomplete="email" />
     <input type="password" id="authPassword" placeholder="Password" autocomplete="current-password" />
     <div class="auth-error" id="authError"></div>
-    <button class="btn" id="authSubmit">Sign in</button>
+    <button class="btn" id="authSubmit" style="width:100%;">Sign in</button>
   </div>
   <div class="auth-toggle">
     <span id="authToggleText">Don't have an account?</span>
-    <a id="authToggleLink">Sign up</a>
+    <a id="authToggleLink"> Sign up</a>
   </div>
 </div>
 
-<!-- App (shown when logged in) -->
+<!-- App -->
 <main id="appMain" style="display:none;">
   <div class="add-bar">
-    <input type="text" id="q" placeholder="What do you want? e.g. Sony WH-1000XM5, oversized vintage band tee, Goa weekend" autocomplete="off" />
+    <input type="text" id="q" placeholder="What do you want? e.g. Sony WH-1000XM5, Macallan 18, Goa weekend, oversized vintage tee" autocomplete="off" />
     <button class="btn" id="addBtn">Add</button>
     <button class="btn btn-ghost" id="bulkOpenBtn">Bulk add</button>
   </div>
   <div class="notes-bar">
-    <textarea id="notes" rows="1" placeholder="Optional notes (size, colour, budget, brand vibe)..."></textarea>
+    <textarea id="notes" rows="1" placeholder="Optional notes (size, colour, budget, occasion...)"></textarea>
   </div>
-
   <div class="meta" id="metaBar" style="display:none;"></div>
-
   <div id="categories"></div>
-  <div id="empty" class="empty-state" style="display:none;">
-    Wishlist empty. Add the first thing you want.
-  </div>
+  <div id="empty" class="empty-state" style="display:none;">Wishlist empty. Add the first thing you want.</div>
 </main>
 
 <div class="modal-bg" id="bulkModal">
   <div class="modal">
     <h3>Bulk add items</h3>
-    <p class="helper">Paste one item per line. We'll find the cheapest vendors for each.</p>
-    <textarea id="bulkText" placeholder="Sony WH-1000XM5&#10;iPad Pro M4&#10;DJI Osmo Pocket 3&#10;Goa 3N package"></textarea>
+    <p class="helper">One item per line. AI will categorise and find vendors for each.</p>
+    <textarea id="bulkText" placeholder="Macallan 18&#10;Sony WH-1000XM5&#10;Goa 3N weekend&#10;Oversized band tee"></textarea>
     <div class="modal-actions">
       <button class="btn btn-ghost" id="bulkCancelBtn">Cancel</button>
       <button class="btn" id="bulkGoBtn">Find prices</button>
@@ -349,479 +225,367 @@
 <div class="toast" id="toast"></div>
 
 <script type="module">
-  // ============================================================
-  //  CONFIG
-  // ============================================================
-  const SUPABASE_URL = "https://cqlyqyuvinhlyyqwbcdt.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxbHlxeXV2aW5obHl5cXdiY2R0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0NjM5NjUsImV4cCI6MjA5MzAzOTk2NX0.r-KzoMe7HlYg8jVS1T4u1Zcyk4Ten9VTIo4-oAU3trM";
-  const SUGGEST_ENDPOINT = "/api/suggest";
+  const SUPABASE_URL  = "https://cqlyqyuvinhlyyqwbcdt.supabase.co";
+  const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxbHlxeXV2aW5obHl5cXdiY2R0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0NjM5NjUsImV4cCI6MjA5MzAzOTk2NX0.r-KzoMe7HlYg8jVS1T4u1Zcyk4Ten9VTIo4-oAU3trM";
+  const SUGGEST_EP    = "/api/suggest";
 
-  // ============================================================
-  //  Vendor URL templates
-  // ============================================================
   const VENDORS = {
-    "Amazon":        (q) => `https://www.amazon.in/s?k=${encodeURIComponent(q)}`,
-    "Flipkart":      (q) => `https://www.flipkart.com/search?q=${encodeURIComponent(q)}`,
-    "Myntra":        (q) => `https://www.myntra.com/${encodeURIComponent(q.trim().replace(/\s+/g, "-").toLowerCase())}?rawQuery=${encodeURIComponent(q)}`,
-    "Ajio":          (q) => `https://www.ajio.com/search/?text=${encodeURIComponent(q)}`,
-    "Meesho":        (q) => `https://www.meesho.com/search?q=${encodeURIComponent(q)}`,
-    "Nykaa Fashion": (q) => `https://www.nykaafashion.com/search/?q=${encodeURIComponent(q)}`
+    "Amazon":        q => `https://www.amazon.in/s?k=${encodeURIComponent(q)}`,
+    "Flipkart":      q => `https://www.flipkart.com/search?q=${encodeURIComponent(q)}`,
+    "Myntra":        q => `https://www.myntra.com/${encodeURIComponent(q.trim().replace(/\s+/g,"-").toLowerCase())}?rawQuery=${encodeURIComponent(q)}`,
+    "Ajio":          q => `https://www.ajio.com/search/?text=${encodeURIComponent(q)}`,
+    "Meesho":        q => `https://www.meesho.com/search?q=${encodeURIComponent(q)}`,
+    "Nykaa Fashion": q => `https://www.nykaafashion.com/search/?q=${encodeURIComponent(q)}`
   };
-  const VENDOR_ORDER = ["Amazon", "Flipkart", "Myntra", "Ajio", "Meesho", "Nykaa Fashion"];
+  const VENDOR_ORDER = ["Amazon","Flipkart","Myntra","Ajio","Meesho","Nykaa Fashion"];
 
-  // ============================================================
-  //  Supabase helpers (REST + Auth via GoTrue)
-  // ============================================================
-  let accessToken = null;
-  let refreshToken = null;
-  let currentUser = null;
+  // ── session ──────────────────────────────────────────────────
+  let accessToken = null, refreshToken = null, currentUser = null;
 
-  function authHeaders() {
-    return {
-      "apikey": SUPABASE_ANON_KEY,
-      "Authorization": `Bearer ${accessToken || SUPABASE_ANON_KEY}`,
-      "Content-Type": "application/json",
-      "Prefer": "return=representation"
-    };
+  function authHeaders(extra = {}) {
+    return { "apikey": SUPABASE_ANON, "Authorization": `Bearer ${accessToken || SUPABASE_ANON}`, "Content-Type": "application/json", "Prefer": "return=representation", ...extra };
   }
 
-  async function sbFetch(path, opts = {}) {
-    const url = `${SUPABASE_URL}/rest/v1${path}`;
-    const res = await fetch(url, { ...opts, headers: { ...authHeaders(), ...(opts.headers || {}) } });
-    if (!res.ok) throw new Error(`Supabase ${res.status}: ${await res.text()}`);
-    if (res.status === 204) return null;
-    return res.json();
-  }
-
-  // Auth API calls
-  async function authCall(endpoint, body) {
-    const res = await fetch(`${SUPABASE_URL}/auth/v1${endpoint}`, {
-      method: "POST",
-      headers: { "apikey": SUPABASE_ANON_KEY, "Content-Type": "application/json" },
+  async function gotruePost(endpoint, body) {
+    const r = await fetch(`${SUPABASE_URL}/auth/v1${endpoint}`, {
+      method: "POST", headers: { "apikey": SUPABASE_ANON, "Content-Type": "application/json" },
       body: JSON.stringify(body)
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error_description || data.msg || data.error || "Auth failed");
-    return data;
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error_description || d.msg || d.error || "Auth error");
+    return d;
   }
 
-  async function signUp(email, password) {
-    const data = await authCall("/signup", { email, password });
-    if (data.access_token) {
-      setSession(data);
-    }
-    return data;
-  }
-
-  async function signIn(email, password) {
-    const data = await authCall("/token?grant_type=password", { email, password });
-    setSession(data);
-    return data;
+  async function getUser(token) {
+    const r = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+      headers: { "apikey": SUPABASE_ANON, "Authorization": `Bearer ${token}` }
+    });
+    if (!r.ok) throw new Error("Could not fetch user");
+    return r.json();
   }
 
   function setSession(data) {
-    accessToken = data.access_token;
+    accessToken  = data.access_token;
     refreshToken = data.refresh_token;
-    currentUser = data.user;
+    currentUser  = data.user;
     localStorage.setItem("violate.session", JSON.stringify({ accessToken, refreshToken, user: currentUser }));
   }
 
   function clearSession() {
-    accessToken = null;
-    refreshToken = null;
-    currentUser = null;
+    accessToken = refreshToken = currentUser = null;
     localStorage.removeItem("violate.session");
   }
 
   function loadSession() {
     try {
-      const s = JSON.parse(localStorage.getItem("violate.session"));
-      if (s && s.accessToken) {
-        accessToken = s.accessToken;
-        refreshToken = s.refreshToken;
-        currentUser = s.user;
-        return true;
-      }
+      const s = JSON.parse(localStorage.getItem("violate.session") || "null");
+      if (s?.accessToken) { accessToken = s.accessToken; refreshToken = s.refreshToken; currentUser = s.user; return true; }
     } catch {}
     return false;
   }
 
-  async function tryRefreshToken() {
+  async function tryRefresh() {
     if (!refreshToken) return false;
-    try {
-      const data = await authCall("/token?grant_type=refresh_token", { refresh_token: refreshToken });
-      setSession(data);
-      return true;
-    } catch {
-      clearSession();
-      return false;
+    try { const d = await gotruePost("/token?grant_type=refresh_token", { refresh_token: refreshToken }); setSession(d); return true; }
+    catch { clearSession(); return false; }
+  }
+
+  // ── supabase REST ─────────────────────────────────────────────
+  async function sbFetch(path, opts = {}) {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1${path}`, { ...opts, headers: authHeaders(opts.headers || {}) });
+    if (!r.ok) {
+      const txt = await r.text();
+      if (r.status === 401) { if (await tryRefresh()) return sbFetch(path, opts); throw new Error("session_expired"); }
+      throw new Error(`Supabase ${r.status}: ${txt}`);
     }
-  }
-
-  // Data calls
-  async function sbList() {
-    return sbFetch(`/wishlist?user_id=eq.${currentUser.id}&order=created_at.desc`);
-  }
-  async function sbInsert(row) {
-    return sbFetch(`/wishlist`, { method: "POST", body: JSON.stringify(row) });
-  }
-  async function sbDelete(id) {
-    return sbFetch(`/wishlist?id=eq.${encodeURIComponent(id)}`, { method: "DELETE" });
-  }
-  async function sbUpdate(id, patch) {
-    return sbFetch(`/wishlist?id=eq.${encodeURIComponent(id)}`, { method: "PATCH", body: JSON.stringify(patch) });
-  }
-
-  // ============================================================
-  //  AI suggest call
-  // ============================================================
-  async function aiSuggest(query, notes) {
-    const r = await fetch(SUGGEST_ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query, notes })
-    });
-    if (!r.ok) throw new Error(`Suggest ${r.status}: ${await r.text()}`);
+    if (r.status === 204) return null;
     return r.json();
   }
 
-  // ============================================================
-  //  UI helpers
-  // ============================================================
-  const $ = (id) => document.getElementById(id);
-  let items = [];
-  let collapsed = {};
+  const sbList   = ()       => sbFetch(`/wishlist?user_id=eq.${currentUser.id}&order=created_at.desc`);
+  const sbInsert = row      => sbFetch(`/wishlist`, { method:"POST", body:JSON.stringify(row) });
+  const sbDelete = id       => sbFetch(`/wishlist?id=eq.${encodeURIComponent(id)}`, { method:"DELETE" });
+  const sbPatch  = (id, p)  => sbFetch(`/wishlist?id=eq.${encodeURIComponent(id)}`, { method:"PATCH", body:JSON.stringify(p) });
 
-  function esc(s) { return String(s || "").replace(/[<>&"']/g, (c) => ({"<":"&lt;",">":"&gt;","&":"&amp;","\"":"&quot;","'":"&#39;"}[c])); }
-  function fmt(n) { return "\u20B9" + Number(n || 0).toLocaleString('en-IN'); }
-
-  function toast(msg) {
-    const t = $("toast"); t.textContent = msg; t.classList.add("show");
-    clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("show"), 2200);
+  // ── AI ────────────────────────────────────────────────────────
+  async function aiSuggest(query, notes) {
+    const r = await fetch(SUGGEST_EP, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({query, notes}) });
+    if (!r.ok) throw new Error(`AI ${r.status}: ${await r.text()}`);
+    return r.json();
   }
 
-  function buildVendorLinks(item) {
+  // ── helpers ───────────────────────────────────────────────────
+  const $   = id => document.getElementById(id);
+  const esc = s  => String(s||"").replace(/[<>&"']/g, c => ({"<":"&lt;",">":"&gt;","&":"&amp;","\"":"&quot;","'":"&#39;"}[c]));
+  const fmt = n  => "₹" + Number(n||0).toLocaleString("en-IN");
+
+  function toast(msg) {
+    const t=$("toast"); t.textContent=msg; t.classList.add("show");
+    clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("show"),2400);
+  }
+
+  function vendorLinks(item) {
     const q = item.ai?.name || item.query || "";
-    const ranked = (item.ai?.bestVendors || []).filter((v) => VENDORS[v]);
-    const rest = VENDOR_ORDER.filter((v) => !ranked.includes(v));
-    return [...ranked, ...rest].map((v) => ({
-      name: v,
-      url: VENDORS[v](q),
-      recommended: ranked.includes(v)
-    }));
+    const ranked = (item.ai?.bestVendors || []).filter(v => VENDORS[v]);
+    const rest   = VENDOR_ORDER.filter(v => !ranked.includes(v));
+    return [...ranked, ...rest].map(v => ({ name:v, url:VENDORS[v](q), recommended:ranked.includes(v) }));
   }
 
   function groupByCategory() {
-    const cats = {};
-    items.forEach((item) => {
-      const cat = item.ai?.category || "Other";
-      if (!cats[cat]) cats[cat] = [];
-      cats[cat].push(item);
+    const map = {};
+    items.forEach(item => {
+      const cat = (item.ai?.category || "Other").trim();
+      (map[cat] = map[cat] || []).push(item);
     });
-    return Object.entries(cats).sort(([a], [b]) => a.localeCompare(b));
+    return Object.entries(map).sort(([a],[b]) => a.localeCompare(b));
   }
 
-  // ============================================================
-  //  Auth UI
-  // ============================================================
+  // ── auth UI ───────────────────────────────────────────────────
   let isSignUp = false;
 
   function showAuth() {
     $("authPage").style.display = "block";
-    $("appMain").style.display = "none";
+    $("appMain").style.display  = "none";
     $("navBar").innerHTML = "";
-    updateAuthForm();
   }
 
   function showApp() {
     $("authPage").style.display = "none";
-    $("appMain").style.display = "block";
-    const initials = (currentUser.email || "?").substring(0, 2).toUpperCase();
-    $("navBar").innerHTML = `
-      <span class="user-email">${esc(currentUser.email)}</span>
-      <a id="logoutBtn">Sign out</a>
-    `;
-    $("logoutBtn").onclick = () => { clearSession(); showAuth(); };
+    $("appMain").style.display  = "block";
+    $("navBar").innerHTML = `<span>${esc(currentUser.email || "")}</span><a id="logoutBtn">Sign out</a>`;
+    $("logoutBtn").onclick = () => { clearSession(); items = []; showAuth(); };
   }
 
   function updateAuthForm() {
-    $("authTitle").textContent = isSignUp ? "Create account" : "Sign in";
-    $("authSubmit").textContent = isSignUp ? "Sign up" : "Sign in";
+    $("authTitle").textContent      = isSignUp ? "Create account" : "Sign in";
+    $("authSubmit").textContent     = isSignUp ? "Sign up"        : "Sign in";
     $("authToggleText").textContent = isSignUp ? "Already have an account?" : "Don't have an account?";
-    $("authToggleLink").textContent = isSignUp ? "Sign in" : "Sign up";
-    $("authPassword").autocomplete = isSignUp ? "new-password" : "current-password";
-    $("authError").textContent = "";
+    $("authToggleLink").textContent = isSignUp ? " Sign in" : " Sign up";
+    $("authError").textContent      = "";
   }
 
   $("authToggleLink").onclick = () => { isSignUp = !isSignUp; updateAuthForm(); };
 
-  $("authSubmit").onclick = async () => {
-    const email = $("authEmail").value.trim();
-    const password = $("authPassword").value;
-    $("authError").textContent = "";
-    if (!email || !password) { $("authError").textContent = "Email and password required."; return; }
-    if (password.length < 6) { $("authError").textContent = "Password must be at least 6 characters."; return; }
-
-    const btn = $("authSubmit");
-    btn.disabled = true;
-    try {
-      if (isSignUp) {
-        const data = await signUp(email, password);
-        if (!data.access_token) {
-          $("authError").textContent = "";
-          toast("Check your email to confirm your account, then sign in.");
-          isSignUp = false;
-          updateAuthForm();
-          return;
-        }
-      } else {
-        await signIn(email, password);
-      }
-      showApp();
-      bootstrap();
-    } catch (e) {
-      $("authError").textContent = e.message;
-    } finally {
-      btn.disabled = false;
-    }
+  $("googleBtn").onclick = () => {
+    const redirect = encodeURIComponent(window.location.origin);
+    window.location.href = `${SUPABASE_URL}/auth/v1/authorize?provider=google&redirect_to=${redirect}`;
   };
 
-  // Enter key on password field
-  $("authPassword").addEventListener("keydown", (e) => {
-    if (e.key === "Enter") $("authSubmit").click();
-  });
-  $("authEmail").addEventListener("keydown", (e) => {
-    if (e.key === "Enter") $("authPassword").focus();
+  $("authSubmit").onclick = async () => {
+    const email = $("authEmail").value.trim();
+    const pass  = $("authPassword").value;
+    $("authError").textContent = "";
+    if (!email || !pass) { $("authError").textContent = "Email and password required."; return; }
+    if (pass.length < 6)  { $("authError").textContent = "Password must be at least 6 characters."; return; }
+    const btn = $("authSubmit"); btn.disabled = true;
+    try {
+      if (isSignUp) {
+        const d = await gotruePost("/signup", { email, password: pass });
+        if (!d.access_token) { toast("Check your email to confirm, then sign in."); isSignUp=false; updateAuthForm(); return; }
+        setSession(d);
+      } else {
+        setSession(await gotruePost("/token?grant_type=password", { email, password: pass }));
+      }
+      showApp(); bootstrap();
+    } catch(e) { $("authError").textContent = e.message; }
+    finally { btn.disabled = false; }
+  };
+
+  $("authPassword").onkeydown = e => { if (e.key==="Enter") $("authSubmit").click(); };
+  $("authEmail").onkeydown    = e => { if (e.key==="Enter") $("authPassword").focus(); };
+
+  // ── render ────────────────────────────────────────────────────
+  let items     = [];
+  let collapsed = {};
+
+  // Single delegated listener — set once, survives re-renders
+  $("categories").addEventListener("click", e => {
+    const buy     = e.target.closest("[data-buy]");
+    const refresh = e.target.closest("[data-refresh]");
+    const del     = e.target.closest("[data-delete]");
+    const row     = e.target.closest("tr.row");
+
+    if (buy)     { e.stopPropagation(); window.open(buy.dataset.buy,"_blank"); return; }
+    if (refresh) { e.stopPropagation(); const it=items.find(i=>i.id===refresh.dataset.refresh); if(it) refreshItem(it); return; }
+    if (del)     { e.stopPropagation(); const it=items.find(i=>i.id===del.dataset.delete);     if(it) removeItem(it);  return; }
+    if (row) {
+      const d = document.getElementById(row.dataset.detail);
+      if (d) d.style.display = d.style.display==="table-row" ? "none" : "table-row";
+    }
   });
 
-  // ============================================================
-  //  Render
-  // ============================================================
   function renderMeta() {
     const bar = $("metaBar");
-    if (items.length === 0) { bar.style.display = "none"; return; }
+    if (!items.length) { bar.style.display="none"; return; }
     bar.style.display = "flex";
-    const cats = groupByCategory();
-    const totalVendors = new Set(items.flatMap((i) => (i.ai?.bestVendors || []))).size;
-    const hasPrice = items.filter((i) => i.ai?.priceRange?.min);
-    const totalMin = hasPrice.reduce((s, i) => s + (i.ai.priceRange.min || 0), 0);
-    const totalMax = hasPrice.reduce((s, i) => s + (i.ai.priceRange.max || 0), 0);
+    const cats   = groupByCategory();
+    const priced = items.filter(i=>i.ai?.priceRange?.min);
+    const totMin = priced.reduce((s,i)=>s+(i.ai.priceRange.min||0),0);
+    const totMax = priced.reduce((s,i)=>s+(i.ai.priceRange.max||0),0);
     bar.innerHTML = `
       <span><strong>${items.length}</strong> items</span>
       <span>across <strong>${cats.length}</strong> categories</span>
-      ${hasPrice.length ? `<span>est. total <strong>${fmt(totalMin)}</strong> – <strong>${fmt(totalMax)}</strong></span>` : ""}
-      <span>tracking <strong>${totalVendors || VENDOR_ORDER.length}</strong> vendors</span>
-    `;
+      ${priced.length ? `<span>est. total <strong>${fmt(totMin)}</strong> – <strong>${fmt(totMax)}</strong></span>` : ""}
+      <span>tracking <strong>${VENDOR_ORDER.length}</strong> vendors</span>`;
   }
 
   function render() {
     const root = $("categories");
     root.innerHTML = "";
-    if (items.length === 0) {
-      $("empty").style.display = "block";
-      renderMeta();
-      return;
-    }
-    $("empty").style.display = "none";
+    $("empty").style.display = items.length ? "none" : "block";
     renderMeta();
+    if (!items.length) return;
 
-    const cats = groupByCategory();
-    cats.forEach(([catName, catItems], ci) => {
-      const sec = document.createElement('div');
-      sec.className = 'category' + (collapsed[catName] ? ' collapsed' : '');
+    groupByCategory().forEach(([catName, catItems], ci) => {
+      const sec = document.createElement("div");
+      sec.className = "category" + (collapsed[catName] ? " collapsed" : "");
+
+      const rows = catItems.map((item, ii) => {
+        const ai       = item.ai || {};
+        const priceStr = ai.priceRange?.min ? `${fmt(ai.priceRange.min)} – ${fmt(ai.priceRange.max)}` : "—";
+        const bestV    = (ai.bestVendors||[])[0] || "—";
+        const vlinks   = vendorLinks(item);
+        const altQs    = (ai.alternateQueries||[]).slice(0,3);
+        const did      = `d-${ci}-${ii}`;
+        return `
+        <tr class="row" data-detail="${did}">
+          <td>${esc(ai.name||item.query)}${item.notes?` <span style="color:var(--muted);font-style:italic;font-size:11px;">"${esc(item.notes)}"</span>`:""}
+          </td>
+          <td class="price">${priceStr}</td>
+          <td class="vendor-cell">${esc(bestV)} <span class="badge muted">${VENDOR_ORDER.length} vendors</span></td>
+          <td style="text-align:right;"><button class="action-link" data-buy="${esc(vlinks[0]?.url||"#")}">Buy</button></td>
+        </tr>
+        <tr class="detail-row" id="${did}" style="display:none;">
+          <td colspan="4">
+            <div class="vendor-list">
+              ${vlinks.map(v=>`<a class="vendor-row${v.recommended?" best":""}" href="${v.url}" target="_blank" rel="noopener">
+                <span>${v.name}${v.recommended?` <span class="badge">best</span>`:""}</span><span>→</span></a>`).join("")}
+            </div>
+            ${ai.reasoning?`<div class="detail-meta">${esc(ai.reasoning)}</div>`:""}
+            ${altQs.length?`<div class="alt-queries"><span class="label">Try also:</span>${altQs.map(q=>`<a class="alt-tag" href="${VENDORS["Amazon"](q)}" target="_blank" rel="noopener">${esc(q)}</a>`).join("")}</div>`:""}
+            <div class="detail-actions">
+              <button class="action-link" data-refresh="${item.id}">Re-suggest</button>
+              <button class="action-link danger" data-delete="${item.id}">Delete</button>
+            </div>
+          </td>
+        </tr>`;
+      }).join("");
+
       sec.innerHTML = `
         <div class="cat-head">
-          <div>
-            <span class="chev">▾</span>
+          <div><span class="chev">▾</span>
             <span class="cat-name" style="margin-left:6px;">${esc(catName)}</span>
-            <span class="cat-meta"> · ${catItems.length} item${catItems.length !== 1 ? 's' : ''}</span>
+            <span class="cat-meta"> · ${catItems.length} item${catItems.length!==1?"s":""}</span>
           </div>
         </div>
         <table>
-          <thead>
-            <tr>
-              <th style="width:40%">Item</th>
-              <th>Est. price</th>
-              <th>Best vendor</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-          ${catItems.map((item, ii) => {
-            const ai = item.ai || {};
-            const priceStr = ai.priceRange?.min ? `${fmt(ai.priceRange.min)} – ${fmt(ai.priceRange.max)}` : "\u2014";
-            const bestVendor = (ai.bestVendors || [])[0] || "\u2014";
-            const vendorCount = VENDOR_ORDER.length;
-            const vendors = buildVendorLinks(item);
-            const altQs = (ai.alternateQueries || []).slice(0, 3);
-            const itemId = `detail-${ci}-${ii}`;
-            return `
-            <tr class="row" data-detail="${itemId}">
-              <td>${esc(ai.name || item.query)}${item.notes ? ` <span style="color:var(--muted);font-style:italic;font-size:11px;">"${esc(item.notes)}"</span>` : ""}</td>
-              <td class="price">${priceStr}</td>
-              <td class="vendor">${esc(bestVendor)} <span class="badge muted">${vendorCount} vendors</span></td>
-              <td style="text-align:right;">
-                <button class="action-link" data-buy="${esc(vendors[0]?.url || "#")}">Buy</button>
-              </td>
-            </tr>
-            <tr class="detail-row" id="${itemId}" style="display:none;">
-              <td colspan="4">
-                <div class="vendor-list">
-                  ${vendors.map((v) => `
-                    <a class="vendor-row ${v.recommended ? 'best' : ''}" href="${v.url}" target="_blank" rel="noopener">
-                      <span>${v.name}${v.recommended ? ' <span class="badge">best</span>' : ''}</span>
-                      <span>\u2192</span>
-                    </a>
-                  `).join('')}
-                </div>
-                ${ai.reasoning ? `<div class="detail-meta"><span class="reasoning">${esc(ai.reasoning)}</span></div>` : ""}
-                ${altQs.length ? `
-                  <div class="alt-queries">
-                    <span class="label">Try also:</span>
-                    ${altQs.map((q) => `<a class="alt-tag" href="${VENDORS["Amazon"](q)}" target="_blank" rel="noopener">${esc(q)}</a>`).join("")}
-                  </div>` : ""}
-                <div class="detail-actions">
-                  <button class="action-link" data-refresh="${item.id}">Re-suggest</button>
-                  <button class="action-link danger" data-delete="${item.id}">Delete</button>
-                </div>
-              </td>
-            </tr>`;
-          }).join('')}
-          </tbody>
-        </table>
-      `;
-      sec.querySelector('.cat-head').addEventListener('click', () => {
+          <thead><tr><th style="width:40%">Item</th><th>Est. price</th><th>Best vendor</th><th></th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>`;
+
+      sec.querySelector(".cat-head").onclick = () => {
         collapsed[catName] = !collapsed[catName];
-        sec.classList.toggle('collapsed');
-      });
+        sec.classList.toggle("collapsed");
+      };
       root.appendChild(sec);
-    });
-
-    root.addEventListener('click', (e) => {
-      const row = e.target.closest('tr.row');
-      const buyBtn = e.target.closest('[data-buy]');
-      const refreshBtn = e.target.closest('[data-refresh]');
-      const deleteBtn = e.target.closest('[data-delete]');
-
-      if (buyBtn) { e.stopPropagation(); window.open(buyBtn.dataset.buy, '_blank'); return; }
-      if (refreshBtn) { e.stopPropagation(); const it = items.find((i) => i.id === refreshBtn.dataset.refresh); if (it) refreshItem(it); return; }
-      if (deleteBtn) { e.stopPropagation(); const it = items.find((i) => i.id === deleteBtn.dataset.delete); if (it) removeItem(it); return; }
-      if (row) {
-        const d = document.getElementById(row.dataset.detail);
-        if (d) d.style.display = d.style.display === 'table-row' ? 'none' : 'table-row';
-      }
     });
   }
 
-  // ============================================================
-  //  Mutations
-  // ============================================================
+  // ── mutations ─────────────────────────────────────────────────
   async function addItem() {
-    const q = $("q").value.trim();
+    const q     = $("q").value.trim();
     const notes = $("notes").value.trim();
     if (!q) return;
     const btn = $("addBtn");
-    btn.disabled = true; btn.innerHTML = '<span class="loader"></span>Thinking';
-
+    btn.disabled=true; btn.innerHTML='<span class="loader"></span>Thinking';
     try {
-      const ai = await aiSuggest(q, notes);
-      const row = { user_id: currentUser.id, query: q, notes: notes || null, ai };
+      const ai  = await aiSuggest(q, notes);
+      const row = { user_id: currentUser.id, query: q, notes: notes||null, ai };
       const ins = await sbInsert(row);
-      const saved = ins && ins[0] ? ins[0] : { ...row, id: crypto.randomUUID(), created_at: new Date().toISOString() };
-      items.unshift(saved);
-      $("q").value = ""; $("notes").value = "";
-      render();
-      toast("Added");
-    } catch (e) {
-      console.error(e);
-      toast("Failed: " + (e.message || "error"));
-    } finally {
-      btn.disabled = false; btn.textContent = "Add";
-    }
+      items.unshift(ins?.[0] || { ...row, id:crypto.randomUUID(), created_at:new Date().toISOString() });
+      $("q").value=""; $("notes").value="";
+      render(); toast("Added");
+    } catch(e) { console.error(e); toast("Failed: "+(e.message||"error")); }
+    finally { btn.disabled=false; btn.textContent="Add"; }
   }
 
   async function removeItem(item) {
-    items = items.filter((i) => i.id !== item.id);
+    items = items.filter(i=>i.id!==item.id);
     render();
-    try { await sbDelete(item.id); } catch (e) { console.error(e); }
+    try { await sbDelete(item.id); } catch(e) { console.error(e); }
     toast("Removed");
   }
 
   async function refreshItem(item) {
     toast("Re-running AI...");
     try {
-      const ai = await aiSuggest(item.query, item.notes);
-      item.ai = ai;
-      try { await sbUpdate(item.id, { ai }); } catch (e) { console.error(e); }
+      item.ai = await aiSuggest(item.query, item.notes);
       render();
+      try { await sbPatch(item.id, { ai: item.ai }); } catch(e) { console.error(e); }
       toast("Updated");
-    } catch (e) {
-      toast("Failed: " + e.message);
-    }
+    } catch(e) { toast("Failed: "+e.message); }
   }
 
-  // ============================================================
-  //  Bulk add
-  // ============================================================
-  $("bulkOpenBtn").onclick = () => $("bulkModal").classList.add("show");
-  $("bulkCancelBtn").onclick = () => $("bulkModal").classList.remove("show");
-  $("bulkGoBtn").onclick = async () => {
-    const lines = $("bulkText").value.split("\n").map((l) => l.trim()).filter(Boolean);
+  async function bulkAdd() {
+    const lines = $("bulkText").value.split("\n").map(l=>l.trim()).filter(Boolean);
     if (!lines.length) return;
-    const btn = $("bulkGoBtn");
-    btn.disabled = true; btn.innerHTML = '<span class="loader"></span>Working';
+    const btn=$("bulkGoBtn"); btn.disabled=true; btn.innerHTML='<span class="loader"></span>Working';
     for (const line of lines) {
       try {
-        const ai = await aiSuggest(line, "");
+        const ai  = await aiSuggest(line, "");
         const row = { user_id: currentUser.id, query: line, notes: null, ai };
         const ins = await sbInsert(row);
-        const saved = ins && ins[0] ? ins[0] : { ...row, id: crypto.randomUUID(), created_at: new Date().toISOString() };
-        items.unshift(saved);
+        items.unshift(ins?.[0] || { ...row, id:crypto.randomUUID(), created_at:new Date().toISOString() });
         render();
-      } catch (e) { console.error("Bulk add failed for:", line, e); }
+      } catch(e) { console.error("Bulk failed:", line, e); }
     }
-    btn.disabled = false; btn.textContent = "Find prices";
-    $("bulkText").value = "";
+    btn.disabled=false; btn.textContent="Find prices";
+    $("bulkText").value="";
     $("bulkModal").classList.remove("show");
     toast(`Added ${lines.length} items`);
-  };
+  }
 
-  // ============================================================
-  //  Bootstrap
-  // ============================================================
+  // ── bootstrap ─────────────────────────────────────────────────
   async function bootstrap() {
     try {
       const cloud = await sbList();
-      if (Array.isArray(cloud)) {
-        items = cloud;
-        render();
-      }
-    } catch (e) {
-      console.error("Failed to load wishlist:", e);
-      // If token expired, try refresh
-      if (e.message?.includes("401") || e.message?.includes("JWT")) {
-        const ok = await tryRefreshToken();
-        if (ok) { bootstrap(); return; }
-        clearSession();
-        showAuth();
-        toast("Session expired. Please sign in again.");
-      }
+      if (Array.isArray(cloud)) { items=cloud; render(); }
+    } catch(e) {
+      if (e.message==="session_expired") { clearSession(); showAuth(); toast("Session expired. Sign in again."); }
+      else console.error(e);
     }
   }
 
-  $("addBtn").onclick = addItem;
-  $("q").addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); addItem(); } });
+  // ── event bindings ────────────────────────────────────────────
+  $("addBtn").onclick     = addItem;
+  $("q").onkeydown        = e => { if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();addItem();} };
+  $("bulkOpenBtn").onclick = () => $("bulkModal").classList.add("show");
+  $("bulkCancelBtn").onclick = () => $("bulkModal").classList.remove("show");
+  $("bulkGoBtn").onclick  = bulkAdd;
 
-  // ============================================================
-  //  Init — check for existing session
-  // ============================================================
-  if (loadSession()) {
-    showApp();
-    bootstrap();
-  } else {
-    showAuth();
+  // ── init: handle Google OAuth redirect hash ───────────────────
+  async function init() {
+    const hash   = window.location.hash.slice(1);
+    const params = new URLSearchParams(hash);
+    const at     = params.get("access_token");
+    const rt     = params.get("refresh_token");
+
+    if (at) {
+      // Coming back from Google OAuth
+      window.history.replaceState(null, "", window.location.pathname);
+      try {
+        const user = await getUser(at);
+        setSession({ access_token: at, refresh_token: rt, user });
+        showApp(); bootstrap();
+      } catch(e) { console.error(e); showAuth(); }
+      return;
+    }
+
+    if (loadSession()) { showApp(); bootstrap(); }
+    else showAuth();
   }
-</script>
 
+  init();
+</script>
 </body>
 </html>
