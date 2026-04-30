@@ -545,12 +545,25 @@
     const btn = $("addBtn");
     btn.disabled=true; btn.innerHTML='<span class="loader"></span>Thinking';
     try {
-      const ai  = await aiSuggest(q, notes);
-      const row = { user_id: currentUser.id, query: q, notes: notes||null, ai };
-      const ins = await sbInsert(row);
-      items.unshift(ins?.[0] || { ...row, id:crypto.randomUUID(), created_at:new Date().toISOString() });
+      const ai       = await aiSuggest(q, notes);
+      const localId  = crypto.randomUUID();
+      const localItem = { id: localId, user_id: currentUser.id, query: q, notes: notes||null, ai, created_at: new Date().toISOString() };
+
+      // Show immediately
+      items.unshift(localItem);
       $("q").value=""; $("notes").value="";
       render(); toast("Added");
+
+      // Persist in background — swap local id with real db id on success
+      sbInsert({ user_id: currentUser.id, query: q, notes: notes||null, ai })
+        .then(ins => {
+          if (ins?.[0]) {
+            const idx = items.findIndex(i => i.id === localId);
+            if (idx !== -1) { items[idx] = ins[0]; }
+          }
+        })
+        .catch(e => console.error("Supabase insert failed:", e));
+
     } catch(e) { console.error(e); toast("Failed: "+(e.message||"error")); }
     finally { btn.disabled=false; btn.textContent="Add"; }
   }
@@ -578,12 +591,15 @@
     const btn=$("bulkGoBtn"); btn.disabled=true; btn.innerHTML='<span class="loader"></span>Working';
     for (const line of lines) {
       try {
-        const ai  = await aiSuggest(line, "");
-        const row = { user_id: currentUser.id, query: line, notes: null, ai };
-        const ins = await sbInsert(row);
-        items.unshift(ins?.[0] || { ...row, id:crypto.randomUUID(), created_at:new Date().toISOString() });
+        const ai      = await aiSuggest(line, "");
+        const localId = crypto.randomUUID();
+        const localItem = { id: localId, user_id: currentUser.id, query: line, notes: null, ai, created_at: new Date().toISOString() };
+        items.unshift(localItem);
         render();
-      } catch(e) { console.error("Bulk failed:", line, e); }
+        sbInsert({ user_id: currentUser.id, query: line, notes: null, ai })
+          .then(ins => { if (ins?.[0]) { const idx=items.findIndex(i=>i.id===localId); if(idx!==-1) items[idx]=ins[0]; } })
+          .catch(e => console.error("Bulk insert failed:", line, e));
+      } catch(e) { console.error("Bulk AI failed:", line, e); }
     }
     btn.disabled=false; btn.textContent="Find prices";
     $("bulkText").value="";
