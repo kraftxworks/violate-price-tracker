@@ -47,7 +47,16 @@ export default async function handler(req, res) {
   try {
     let result;
     if (process.env.GEMINI_API_KEY) {
-      result = await callGemini(userPrompt);
+      try {
+        result = await callGemini(userPrompt);
+      } catch (geminiErr) {
+        console.warn("Gemini failed, trying Groq fallback:", geminiErr.message);
+        if (process.env.GROQ_API_KEY) {
+          result = await callGroq(userPrompt);
+        } else {
+          throw geminiErr;
+        }
+      }
     } else if (process.env.GROQ_API_KEY) {
       result = await callGroq(userPrompt);
     } else {
