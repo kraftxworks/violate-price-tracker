@@ -148,6 +148,14 @@
   .modal p.helper { color: var(--muted); font-size: 12px; margin-bottom: 12px; }
   .modal textarea { width: 100%; min-height: 130px; padding: 10px; border: 1px solid var(--line); border-radius: 6px; font-family: inherit; font-size: 13px; resize: vertical; }
   .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; }
+  .modal label { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 5px; margin-top: 12px; }
+  .modal label:first-of-type { margin-top: 0; }
+  .modal input[type=text], .modal select, .modal textarea {
+    width: 100%; padding: 9px 12px; border: 1px solid var(--line);
+    border-radius: 6px; font-size: 13px; font-family: inherit; background: #fff;
+  }
+  .modal input:focus, .modal select:focus, .modal textarea:focus { outline: none; border-color: var(--fg); }
+  .modal textarea { min-height: 60px; resize: vertical; }
 
   .empty-state { padding: 40px 14px; color: var(--muted); font-size: 13px; text-align: center; border: 1px dashed var(--line); border-radius: 8px; }
 
@@ -218,6 +226,41 @@
     <div class="modal-actions">
       <button class="btn btn-ghost" id="bulkCancelBtn">Cancel</button>
       <button class="btn" id="bulkGoBtn">Find prices</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="editModal">
+  <div class="modal">
+    <h3>Edit item</h3>
+    <label>Name</label>
+    <input type="text" id="editName" placeholder="Product name" />
+    <label>Notes</label>
+    <textarea id="editNotes" placeholder="Size, colour, budget, occasion..."></textarea>
+    <label>Category</label>
+    <select id="editCategory">
+      <option>Accessories</option>
+      <option>Audio & Video</option>
+      <option>Automotive</option>
+      <option>Beauty & Grooming</option>
+      <option>Books & Stationery</option>
+      <option>Electronics</option>
+      <option>Fashion</option>
+      <option>Food & Dining</option>
+      <option>Footwear</option>
+      <option>Gaming</option>
+      <option>Health & Wellness</option>
+      <option>Home & Living</option>
+      <option>Jewellery</option>
+      <option>Music & Entertainment</option>
+      <option>Other</option>
+      <option>Sports & Fitness</option>
+      <option>Travel & Experiences</option>
+      <option>Wines & Spirits</option>
+    </select>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="editCancelBtn">Cancel</button>
+      <button class="btn" id="editSaveBtn">Save</button>
     </div>
   </div>
 </div>
@@ -405,7 +448,9 @@
     const del     = e.target.closest("[data-delete]");
     const row     = e.target.closest("tr.row");
 
+    const edit = e.target.closest("[data-edit]");
     if (buy)     { e.stopPropagation(); window.open(buy.dataset.buy,"_blank"); return; }
+    if (edit)    { e.stopPropagation(); const it=items.find(i=>i.id===edit.dataset.edit);      if(it) openEdit(it);    return; }
     if (refresh) { e.stopPropagation(); const it=items.find(i=>i.id===refresh.dataset.refresh); if(it) refreshItem(it); return; }
     if (del)     { e.stopPropagation(); const it=items.find(i=>i.id===del.dataset.delete);     if(it) removeItem(it);  return; }
     if (row) {
@@ -464,6 +509,7 @@
             ${ai.reasoning?`<div class="detail-meta">${esc(ai.reasoning)}</div>`:""}
             ${altQs.length?`<div class="alt-queries"><span class="label">Try also:</span>${altQs.map(q=>`<a class="alt-tag" href="${VENDORS["Amazon"](q)}" target="_blank" rel="noopener">${esc(q)}</a>`).join("")}</div>`:""}
             <div class="detail-actions">
+              <button class="action-link" data-edit="${item.id}">Edit</button>
               <button class="action-link" data-refresh="${item.id}">Re-suggest</button>
               <button class="action-link danger" data-delete="${item.id}">Delete</button>
             </div>
@@ -544,6 +590,41 @@
     $("bulkModal").classList.remove("show");
     toast(`Added ${lines.length} items`);
   }
+
+  // ── edit ─────────────────────────────────────────────────────
+  let editingItem = null;
+
+  function openEdit(item) {
+    editingItem = item;
+    $("editName").value     = item.ai?.name || item.query || "";
+    $("editNotes").value    = item.notes || "";
+    $("editCategory").value = item.ai?.category || "Other";
+    $("editModal").classList.add("show");
+  }
+
+  async function saveEdit() {
+    if (!editingItem) return;
+    const btn = $("editSaveBtn"); btn.disabled = true;
+    const name     = $("editName").value.trim();
+    const notes    = $("editNotes").value.trim();
+    const category = $("editCategory").value;
+
+    editingItem.notes    = notes || null;
+    editingItem.ai       = { ...(editingItem.ai || {}), name: name || editingItem.query, category };
+
+    try {
+      await sbPatch(editingItem.id, { notes: editingItem.notes, ai: editingItem.ai });
+    } catch(e) { console.error(e); }
+
+    $("editModal").classList.remove("show");
+    render();
+    toast("Saved");
+    btn.disabled = false;
+    editingItem = null;
+  }
+
+  $("editCancelBtn").onclick = () => { $("editModal").classList.remove("show"); editingItem = null; };
+  $("editSaveBtn").onclick   = saveEdit;
 
   // ── bootstrap ─────────────────────────────────────────────────
   async function bootstrap() {
