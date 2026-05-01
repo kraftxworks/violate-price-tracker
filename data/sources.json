@@ -1,0 +1,67 @@
+{
+  "Crush cars with tank": [
+    { "name": "Tanks-A-Lot", "location": "Helmdon, UK", "price_inr": 130000, "description": "Drive a real Chieftain battle tank and crush a car — world's original tank experience", "url": "https://www.tanks-alot.co.uk", "best": true },
+    { "name": "Dare2Drive", "location": "Various UK venues", "price_inr": 95000, "description": "Full tank crush experience packages with car selection" }
+  ],
+  "Crush cars with armoured tank": [
+    { "name": "Tanks-A-Lot", "location": "Helmdon, UK", "price_inr": 130000, "description": "Drive a real Chieftain battle tank and crush a car — world's original tank experience", "url": "https://www.tanks-alot.co.uk", "best": true },
+    { "name": "Dare2Drive", "location": "Various UK venues", "price_inr": 95000, "description": "Full tank crush experience packages with car selection" }
+  ],
+  "Antigravity flight": [
+    { "name": "Zero-G Corporation", "location": "Multiple US cities", "price_inr": 700000, "description": "FAA-certified parabolic flights — 15 weightless arcs, no astronaut training required", "url": "https://www.gozerog.com", "best": true },
+    { "name": "Incredible Adventures", "location": "Moscow, Russia", "price_inr": 1800000, "description": "MiG-29 edge-of-space flight with zero-G manoeuvres" }
+  ],
+  "Antigravity / parabolic flight": [
+    { "name": "Zero-G Corporation", "location": "Multiple US cities", "price_inr": 700000, "description": "FAA-certified parabolic flights — 15 weightless arcs, no astronaut training required", "url": "https://www.gozerog.com", "best": true },
+    { "name": "Incredible Adventures", "location": "Moscow, Russia", "price_inr": 1800000, "description": "MiG-29 edge-of-space flight with zero-G manoeuvres" }
+  ],
+  "Skydiving": [
+    { "name": "Skydive India — Mysore", "location": "Mysore, Karnataka", "price_inr": 35000, "description": "AFF certified tandem jump from 10,000 ft over Mysore airfield", "url": "https://www.skydiveindia.in", "best": true },
+    { "name": "Decan Air Sports", "location": "Pune, Maharashtra", "price_inr": 28000, "description": "Tandem skydive with video package over Pune" },
+    { "name": "Temple Pilots", "location": "Delhi NCR", "price_inr": 32000, "description": "India's oldest skydiving school — tandem + solo AFF courses" }
+  ],
+  "Scuba certification": [
+    { "name": "PADI Andaman — Havelock", "location": "Havelock Island, Andaman", "price_inr": 22000, "description": "PADI Open Water Diver full 4-day certification in Andaman reef waters", "best": true },
+    { "name": "Lacadives Dive Centre", "location": "Lakshadweep", "price_inr": 25000, "description": "SSI Open Water cert in India's clearest lagoon waters" },
+    { "name": "Sea Hawks Dive Centre", "location": "Goa", "price_inr": 18000, "description": "PADI certification weekend course, Goa" }
+  ],
+  "Hire 50 bodyguards (one day)": [
+    { "name": "Tops Security India", "location": "Mumbai / Delhi", "price_inr": 350000, "description": "Specialist close-protection detail — ex-NSG and armed forces personnel", "url": "https://www.topssecurity.in", "best": true },
+    { "name": "Force One Security", "location": "Mumbai", "price_inr": 420000, "description": "Ex-military bodyguard unit, full 1-day tactical deployment" }
+  ],
+  "Beach breakfast with flower crown": [
+    { "name": "Soneva Fushi", "location": "North Malé Atoll, Maldives", "price_inr": 180000, "description": "Private beach breakfast with florals, butler service, sunrise setup", "url": "https://www.soneva.com", "best": true },
+    { "name": "Taj Exotica Goa", "location": "Goa, India", "price_inr": 25000, "description": "Beachfront breakfast setup with artisan floral crown experience" },
+    { "name": "Six Senses Vana", "location": "Dehradun, India", "price_inr": 45000, "description": "Garden sunrise breakfast with wellness ritual and florals" }
+  ],
+  "Hypnotism mentor": [
+    { "name": "Dr. Arun Mehta — Clinical Hypnotherapy", "location": "Mumbai / Online", "price_inr": 15000, "description": "India's leading clinical hypnotherapist — 1:1 mentorship, 8-session programme", "best": true },
+    { "name": "NGH India Chapter", "location": "Online", "price_inr": 28000, "description": "National Guild of Hypnotists certified hypnotherapy training with mentorship" },
+    { "name": "Igor Ledochowski — Mentorship", "location": "Online (Global)", "price_inr": 55000, "description": "World-class Conversational Hypnosis master programme", "url": "https://www.hypnosisdownloads.com" }
+  ],
+  "Drift driving school": [
+    { "name": "Yellow Racing Drift Academy", "location": "Dubai / India events", "price_inr": 95000, "description": "2-day intensive with ex-championship drift drivers", "best": true },
+    { "name": "RACR Drift Academy", "location": "Hyderabad, India", "price_inr": 35000, "description": "India's first dedicated drift school — weekend course on sealed tarmac" },
+    { "name": "Madras Motor Race Track", "location": "Chennai, India", "price_inr": 28000, "description": "Drift experience day with MMRT instructors in a dedicated drift car" }
+  ],
+  "Magic mentor": [
+    { "name": "Karan Singh — Mentalist & Coach", "location": "Mumbai / Online", "price_inr": 20000, "description": "India's top mentalist — 1:1 magic and mentalism coaching, 6 sessions", "best": true },
+    { "name": "Ellusionist Mentorship", "location": "Online", "price_inr": 12000, "description": "Card magic and street magic remote mentorship programme", "url": "https://www.ellusionist.com" },
+    { "name": "Society of Indian Magicians", "location": "Pan India", "price_inr": 8000, "description": "Club membership with senior magician mentorship track" }
+  ],
+  "Private island stay": [
+    { "name": "Bangaram Island Resort", "location": "Lakshadweep, India", "price_inr": 120000, "description": "Exclusive island bungalow — 2N private island, all-inclusive, coral reef", "best": true },
+    { "name": "Havelock Luxury Villas", "location": "Radhanagar, Andaman", "price_inr": 85000, "description": "Private beachfront villa with exclusive island section" },
+    { "name": "North Malé Private Charter", "location": "Maldives", "price_inr": 350000, "description": "Full private island charter — 2N, 1 island all to yourself" }
+  ],
+  "Stem cell infusion": [
+    { "name": "Regencell Bioscience", "location": "Mumbai, India", "price_inr": 800000, "description": "Autologous stem cell therapy — full diagnostic protocol + infusion", "best": true },
+    { "name": "Transcell Biologics", "location": "Pune, India", "price_inr": 650000, "description": "Mesenchymal stem cell infusion, regenerative medicine protocol" },
+    { "name": "Medovie Thailand", "location": "Bangkok, Thailand", "price_inr": 950000, "description": "Premium stem cell therapy with full wellness retreat" }
+  ],
+  "Photobiomodulation therapy": [
+    { "name": "BioMax PBM Clinic", "location": "Mumbai, India", "price_inr": 8000, "description": "Full-body photobiomodulation — 10-session protocol with biomarker assessment", "best": true },
+    { "name": "Kamath Wellness Centre", "location": "Bangalore, India", "price_inr": 6500, "description": "Red light + NIR therapy, 8-session package" },
+    { "name": "Lumenis India", "location": "Delhi / Mumbai", "price_inr": 12000, "description": "Medical-grade photobiomodulation, per-session clinical treatment" }
+  ]
+}

@@ -8,23 +8,39 @@
 const GEMINI_MODEL = "gemini-2.0-flash";
 const GROQ_MODEL = "llama-3.3-70b-versatile";
 
-const SYSTEM_PROMPT = `You are a shopping research assistant for buyers in India. Given a rough product description from a user's wishlist, return a strict JSON object only (no markdown, no prose) with this shape:
+const SYSTEM_PROMPT = `You are a goals and lifestyle research assistant for ambitious people in India. Given a goal or wish from a user's bucket list, return a strict JSON object only (no markdown, no prose) with this shape:
 
 {
-  "name": "cleaned product name (2 to 8 words, optimised for marketplace search)",
-  "category": "pick the single best fit from: Fashion, Footwear, Accessories, Electronics, Audio & Video, Home & Living, Beauty & Grooming, Books & Stationery, Sports & Fitness, Food & Dining, Wines & Spirits, Travel & Experiences, Music & Entertainment, Gaming, Jewellery, Health & Wellness, Automotive, Other",
+  "name": "cleaned 2-8 word title optimised for search or clarity",
+  "inferredType": "most likely goal type — one of: Buy|Do|Learn|Meet|Build|Achieve|Visit|Routine|Earn|Review",
+  "inferredVertical": "most likely life vertical — one of: Creator|Possessions|Experiences|Skills|People|Businesses|Properties|Memberships|Health|Education|Career|Financial|Daily OS|Edge",
+  "inferredHorizon": "realistic timeframe — one of: Now|Soon|Mid|Long|Vision",
+  "aiHelpNote": "one punchy sentence on exactly how AI can help achieve this — be specific and useful",
+  "category": "legacy field — one of: Fashion|Footwear|Accessories|Electronics|Audio & Video|Home & Living|Beauty & Grooming|Books & Stationery|Sports & Fitness|Food & Dining|Wines & Spirits|Travel & Experiences|Music & Entertainment|Gaming|Jewellery|Health & Wellness|Automotive|Other",
   "priceRange": { "min": <number INR>, "max": <number INR>, "currency": "INR" },
-  "alternateQueries": ["2 to 4 alternative search phrases that may surface better results"],
-  "bestVendors": ["ranked list of 3 to 6 from: Amazon, Flipkart, Myntra, Ajio, Meesho, Nykaa Fashion"],
-  "reasoning": "one short sentence on why these vendors fit"
+  "alternateQueries": ["2-4 search phrases that surface better results — only relevant for Buy type"],
+  "bestVendors": ["ranked 3-6 from: Amazon, Flipkart, Myntra, Ajio, Meesho, Nykaa Fashion — only relevant for Buy type, else empty array"],
+  "reasoning": "one sentence on vendor fit or goal strategy"
 }
 
-Rules:
-- Use realistic Indian market prices in INR.
-- Category guidance: wine/whisky/beer/spirits → Wines & Spirits. Food/restaurants/snacks → Food & Dining. Flights/hotels/packages → Travel & Experiences. Concerts/events/vinyl → Music & Entertainment. Headphones/speakers/TVs → Audio & Video. Sofas/decor/kitchen → Home & Living. Skincare/makeup → Beauty & Grooming. Gym/running/cricket gear → Sports & Fitness.
-- For fashion/streetwear lean Myntra, Ajio, Meesho, Amazon. For electronics/audio lean Amazon, Flipkart. For beauty lean Nykaa Fashion, Amazon. For books lean Amazon, Flipkart.
-- Never include URLs in the output. The frontend builds search URLs from the cleaned name.
-- Output VALID JSON only. No backticks, no triple-backtick json, no commentary.`;
+Type rules:
+- Buy: owning a physical or financial asset (watch, car, diamond, crypto, gadget, jewellery)
+- Do: one-time experience (skydiving, tank driving, travel event, shoot, collab)
+- Learn: acquiring a skill or knowledge (course, certification, mentor, practice, training)
+- Meet: connecting with a specific person (intro, network, mentor meeting, coffee)
+- Build: creating something from scratch (startup, product, app, content system, fund)
+- Achieve: hitting a milestone or credential (follower count, award, exam score, rank)
+- Visit: going to a specific place (country, city, landmark, restaurant, monument)
+- Routine: recurring habit or daily practice (meditation, workout, journaling, sleep)
+- Earn: generating income or returns (revenue target, investment return, salary milestone)
+- Review: periodic assessment (quarterly review, portfolio rebalance, audit)
+
+Horizon rules: Now = 0-1Y urgent goal; Soon = 1-3Y near-term; Mid = 3-5Y; Long = 5-10Y; Vision = 10Y+ aspiration.
+Vertical rules: physical possessions → Possessions; one-time experiences/adventures → Experiences; skills/knowledge → Skills; people/relationships → People; business/venture → Businesses; real estate → Properties; clubs/access → Memberships; body/wellness → Health; formal education → Education; job/role → Career; money/investments → Financial; daily systems → Daily OS; strategic advantages → Edge; content/audience → Creator.
+
+Price: realistic Indian market estimate in INR. For experiences/services, estimate the total cost.
+For non-Buy types: bestVendors = [], alternateQueries = [].
+Output VALID JSON only. No backticks, no commentary.`;
 
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -129,15 +145,19 @@ function safeParse(text) {
 
 function normalize(obj) {
   return {
-    name: obj.name || "",
-    category: obj.category || "Other",
+    name:             obj.name             || "",
+    inferredType:     obj.inferredType     || "Do",
+    inferredVertical: obj.inferredVertical || "Experiences",
+    inferredHorizon:  obj.inferredHorizon  || "Soon",
+    aiHelpNote:       obj.aiHelpNote       || "",
+    category:         obj.category         || "Other",
     priceRange: {
       min: Number(obj?.priceRange?.min) || 0,
       max: Number(obj?.priceRange?.max) || 0,
       currency: "INR"
     },
     alternateQueries: Array.isArray(obj.alternateQueries) ? obj.alternateQueries.slice(0, 5) : [],
-    bestVendors: Array.isArray(obj.bestVendors) ? obj.bestVendors.slice(0, 6) : [],
-    reasoning: obj.reasoning || ""
+    bestVendors:      Array.isArray(obj.bestVendors)      ? obj.bestVendors.slice(0, 6)      : [],
+    reasoning:        obj.reasoning        || ""
   };
 }
